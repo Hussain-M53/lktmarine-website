@@ -1,18 +1,46 @@
 "use client";
+import { FloatingDock } from "@/components/ui/floating-dock";
 import WorldMap from "@/components/ui/world-map";
 import { MapPinIcon, PhoneIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
 import Link from 'next/link';
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandX,
+} from "@tabler/icons-react";
 
 export function Footer() {
   const quickLinks = [
     { name: 'Home', href: '/' },
     { name: 'About us', href: '/about' },
-    { name: 'Services', href: '/services' },
     { name: 'Products', href: '/products' },
-    { name: 'Blogs', href: '/blogs' },
     { name: 'Contact Us', href: '/contact' },
     { name: 'Sitemap', href: '/sitemap' },
+  ];
+
+  const links = [
+    {
+      title: "Instagram",
+      icon: (
+        <IconBrandInstagram className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "Facebook",
+      icon: (
+        <IconBrandFacebook className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "Twitter",
+      icon: (
+        <IconBrandX className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
   ];
 
   return (
@@ -57,15 +85,11 @@ export function Footer() {
               <p className="text-gray-300">
                 LKT Marine Services was established in the year 2008, with an aim to provide reliable marine services to clients in India and Overseas. Our business includes engineering services and supply of genuine spares and equipment.
               </p>
-              <div className="flex space-x-4 mt-4">
-                <a 
-                  href="https://linkedin.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-[#0077B5] p-2 rounded-full"
-                >
-                  <Image src="/linkedin-icon.svg" alt="LinkedIn" className="h-5 w-5" width={5} height={5}/>
-                </a>
+              <div className="mt-4">
+              <FloatingDock
+                mobileClassName="translate-y-10" // only for demo, remove for production
+                items={links}
+              />
               </div>
             </div>
 

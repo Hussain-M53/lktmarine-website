@@ -11,16 +11,22 @@ interface Image {
 
 interface ImageSliderProps {
   images: Image[];
+  children?: React.ReactNode;
   autoplay?: boolean;
   interval?: number;
   className?: string;
+  overlay?: boolean;
+  overlayClassName?: string;
 }
 
 export const ImageSlider: React.FC<ImageSliderProps> = ({
   images,
+  children,
   autoplay = true,
   interval = 5000,
   className,
+  overlay = true,
+  overlayClassName,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loadedImages, setLoadedImages] = useState<string[]>([]);
@@ -82,22 +88,34 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
         </motion.div>
       </AnimatePresence>
 
+      {/* Overlay */}
+      {overlay && (
+        <div className={cn("absolute inset-0 bg-black/60 z-40", overlayClassName)} />
+      )}
+
+      {/* Children content */}
+      {children && (
+        <div className="absolute inset-0 z-50">
+          {children}
+        </div>
+      )}
+
       {/* Navigation buttons */}
       <button
         onClick={handlePrevious}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-50"
       >
         ←
       </button>
       <button
         onClick={handleNext}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-50"
       >
         →
       </button>
 
       {/* Dots indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">
         {images.map((_, index) => (
           <button
             key={index}

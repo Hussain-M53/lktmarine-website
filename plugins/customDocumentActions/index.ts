@@ -11,20 +11,12 @@ import {LOCKED_DOCUMENT_TYPES, SHOPIFY_DOCUMENT_TYPES} from '../../constants'
 
 export const resolveDocumentActions: DocumentActionsResolver = (prev, {schemaType}) => {
   if (LOCKED_DOCUMENT_TYPES.includes(schemaType)) {
-    prev = prev.filter(
-      (previousAction: DocumentActionComponent) =>
-        previousAction.action === 'publish' || previousAction.action === 'discardChanges'
+    return prev.filter(
+      ({action}) => !['delete', 'unpublish', 'duplicate'].includes(action ?? '')
     )
   }
 
   if (SHOPIFY_DOCUMENT_TYPES.includes(schemaType)) {
-    prev = prev.filter(
-      (previousAction: DocumentActionComponent) =>
-        previousAction.action === 'publish' ||
-        previousAction.action === 'unpublish' ||
-        previousAction.action === 'discardChanges'
-    )
-
     return [
       ...prev,
       shopifyDelete as DocumentActionComponent,

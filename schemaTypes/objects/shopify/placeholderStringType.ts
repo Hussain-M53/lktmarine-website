@@ -1,12 +1,11 @@
 import { defineType } from 'sanity'
-import PlaceholderStringInput from '../../../components/inputs/PlaceholderString'
+import ProxyString from '../../../components/inputs/ProxyString'
 
 export const placeholderStringType = defineType({
   name: 'placeholderString',
-  title: 'Title',
+  title: 'Placeholder String',
   type: 'string',
   components: {
-    input: PlaceholderStringInput,
+    input: ProxyString,
   },
-}
-)
+})

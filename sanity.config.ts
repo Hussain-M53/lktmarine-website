@@ -1,54 +1,20 @@
-import {defineConfig, isDev} from 'sanity'
-
-import {structureTool} from 'sanity/structure'
-import {schemaTypes} from './schemaTypes'
-import {structure} from './structure'
-
-import {visionTool} from '@sanity/vision'
-import {colorInput} from '@sanity/color-input'
-import {imageHotspotArrayPlugin} from 'sanity-plugin-hotspot-array'
-import {media, mediaAssetSource} from 'sanity-plugin-media'
-import { customDocumentActions } from '@/plugins/customDocumentActions' 
-import Navbar from '@/components/studio/Navbar'
-
-const devOnlyPlugins = [visionTool()]
+import { defineConfig } from 'sanity'
+import { deskTool } from 'sanity/desk'
+import { visionTool } from '@sanity/vision'
+import { schemaTypes } from './schemas'
+import {
+  SANITY_STUDIO_TITLE,
+  SANITY_STUDIO_PROJECT_ID,
+  SANITY_STUDIO_DATASET
+} from './constants'
 
 export default defineConfig({
   name: 'default',
-  title: 'lktmarine',
-
-  projectId: '32wddwdo',
-  dataset: 'production',
-  basePath: "/studio",
-  plugins: [
-    structureTool({structure}),
-    colorInput(),
-    imageHotspotArrayPlugin(),
-    customDocumentActions(),
-    media(),
-    ...(isDev ? devOnlyPlugins : []),
-  ],
-
+  title: SANITY_STUDIO_TITLE,
+  projectId: SANITY_STUDIO_PROJECT_ID,
+  dataset: SANITY_STUDIO_DATASET,
+  plugins: [deskTool(), visionTool()],
   schema: {
     types: schemaTypes,
-  },
-
-  form: {
-    file: {
-      assetSources: (previousAssetSources) => {
-        return previousAssetSources.filter((assetSource) => assetSource !== mediaAssetSource)
-      },
-    },
-    image: {
-      assetSources: (previousAssetSources) => {
-        return previousAssetSources.filter((assetSource) => assetSource === mediaAssetSource)
-      },
-    },
-  },
-
-  studio: {
-    components: {
-      navbar: Navbar,
-    },
   },
 })

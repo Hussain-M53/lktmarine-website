@@ -1,20 +1,22 @@
-import {StringInputProps, useFormValue, SanityDocument, StringSchemaType} from 'sanity'
 import get from 'lodash.get'
+import {StringInputProps, useFormValue, Path} from 'sanity'
 
-type Props = StringInputProps<StringSchemaType & {options?: {field?: string}}>
+type Props = StringInputProps & {
+  referenceField: string
+}
 
-const PlaceholderStringInput = (props: Props) => {
-  const {schemaType} = props
+const PlaceholderString = (props: Props) => {
+  const {referenceField} = props
 
-  const path = schemaType?.options?.field
-  const doc = useFormValue([]) as SanityDocument
-
-  const proxyValue = path ? (get(doc, path) as string) : ''
+  const referenceValue = useFormValue([referenceField] as Path) as string
 
   return props.renderDefault({
     ...props,
-    elementProps: {...props.elementProps, placeholder: proxyValue},
+    elementProps: {
+      ...props.elementProps,
+      placeholder: referenceValue ?? '',
+    },
   })
 }
 
-export default PlaceholderStringInput
+export default PlaceholderString

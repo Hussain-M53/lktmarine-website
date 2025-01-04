@@ -114,7 +114,7 @@ export function Footer() {
             <div className="md:col-span-5">
               <div className="flex flex-col items-center mb-8">
                 <Image 
-                  src="/logo.svg" 
+                  src="/Logo.svg" 
                   alt="Company Logo" 
                   className="bg-white text-white p-4 rounded-xl"
                   width={280}

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button } from "@/components/ui/moving-border.tsx";
+import { Button } from "@/components/ui/moving-border";
 
 export function CTAButton() {
   const scrollToQuotation = () => {

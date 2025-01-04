@@ -2,32 +2,25 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const testimonials = [
-  {
-    quote: "The best marine equipment supplier I've worked with.",
-    name: "John Smith",
-    title: "Ship Captain",
-  },
-  {
-    quote: "Exceptional service and quality products.",
-    name: "Sarah Johnson",
-    title: "Fleet Manager",
-  },
-  {
-    quote: "Reliable and professional team.",
-    name: "Michael Brown",
-    title: "Marine Engineer",
-  },
-];
+interface Testimonial {
+  quote: string;
+  name: string;
+  designation: string;
+  src: string;
+}
 
-export const AnimatedTestimonials = () => {
+interface AnimatedTestimonialsProps {
+  testimonials: Testimonial[];
+}
+
+export const AnimatedTestimonials: React.FC<AnimatedTestimonialsProps> = ({ testimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = useCallback(() => {
     setCurrentIndex((prevIndex) => 
       prevIndex + 1 === testimonials.length ? 0 : prevIndex + 1
     );
-  }, []);
+  }, [testimonials.length]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -56,7 +49,7 @@ export const AnimatedTestimonials = () => {
               {testimonials[currentIndex].name}
             </p>
             <p className="text-sm text-gray-600">
-              {testimonials[currentIndex].title}
+              {testimonials[currentIndex].designation}
             </p>
           </motion.div>
         </AnimatePresence>

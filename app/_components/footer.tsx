@@ -64,7 +64,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="bg-[#0077B5] p-2 rounded-full"
                 >
-                  <img src="/linkedin-icon.svg" alt="LinkedIn" className="h-5 w-5" />
+                  <Image src="/linkedin-icon.svg" alt="LinkedIn" className="h-5 w-5" width={5} height={5}/>
                 </a>
               </div>
             </div>

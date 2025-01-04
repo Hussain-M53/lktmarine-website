@@ -1,9 +1,8 @@
 
 import {WarningOutlineIcon} from '@sanity/icons'
-import {StringFieldProps} from 'sanity'
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
 
-export default function CollectionHiddenInput(props: StringFieldProps) {
+export default function CollectionHiddenInput() {
   return (
     <Card padding={4} radius={2} shadow={1} tone="critical">
       <Flex align="flex-start">

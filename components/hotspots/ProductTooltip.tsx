@@ -1,4 +1,4 @@
-import {styled} from 'styled-components'
+import {PortableText} from '@portabletext/react'
 import {PreviewLayoutKey, SchemaType, useSchema} from 'sanity'
 import {Box} from '@sanity/ui'
 import {HotspotTooltipProps} from 'sanity-plugin-hotspot-array'
@@ -6,33 +6,27 @@ import {useMemo} from 'react'
 
 interface HotspotFields {
   productWithVariant?: {
-    product: {
-      _ref: string
+    product?: {
+      title?: string
     }
   }
+  productOption?: string
 }
 
-const StyledBox = styled(Box)`
-  width: 200px;
-`
+export default function ProductTooltip(props: HotspotTooltipProps<HotspotFields>) {
+  const {value} = props
 
-export default function ProductPreview(props: HotspotTooltipProps<HotspotFields>) {
-  const {value, renderPreview} = props
-  const productSchemaType = useSchema().get('product')
-  const hasProduct = value?.productWithVariant?.product?._ref && productSchemaType
+  const title = value?.productWithVariant?.product?.title
+  const option = value?.productOption
 
-  const previewProps = useMemo(
-    () => ({
-      value: value?.productWithVariant?.product,
-      schemaType: productSchemaType as SchemaType,
-      layout: 'default' as PreviewLayoutKey,
-    }),
-    [productSchemaType, value?.productWithVariant?.product]
-  )
+  if (!title) {
+    return null
+  }
 
   return (
-    <StyledBox padding={2}>
-      {hasProduct && previewProps ? renderPreview(previewProps) : `No product selected`}
-    </StyledBox>
+    <Box padding={2}>
+      <div className="text-sm font-medium">{title}</div>
+      {option && <div className="text-xs text-gray-600">{option}</div>}
+    </Box>
   )
 }

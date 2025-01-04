@@ -1,6 +1,7 @@
 import { defineConfig } from 'sanity'
 import { deskTool } from 'sanity/desk'
 import { visionTool } from '@sanity/vision'
+import { imageHotspotArrayPlugin } from 'sanity-plugin-hotspot-array'
 import { schemaTypes } from './schemas'
 import {
   SANITY_STUDIO_TITLE,
@@ -17,6 +18,7 @@ export default defineConfig({
   plugins: [
     deskTool(),
     visionTool(),
+    imageHotspotArrayPlugin(),
   ],
   schema: {
     types: schemaTypes,

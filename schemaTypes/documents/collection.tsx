@@ -5,14 +5,14 @@ import {getExtension} from '@sanity/asset-utils'
 import pluralize from 'pluralize-esm'
 import CollectionHiddenInput from '../../components/inputs/CollectionHidden'
 import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
-import { GROUPS } from '../../constants'
+// import { GROUPS } from '../../constants'
 
 export const collectionType = defineType({
   name: 'collection',
   title: 'Collection',
   type: 'document',
   icon: PackageIcon,
-  groups: GROUPS,
+  // groups: GROUPS,
   fields: [
     defineField({
       name: 'hidden',
@@ -129,6 +129,7 @@ export const collectionType = defineType({
       return {
         media: (
           <ShopifyDocumentStatus
+            isActive
             isDeleted={isDeleted}
             type="collection"
             url={imageUrl}

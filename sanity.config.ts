@@ -13,7 +13,11 @@ export default defineConfig({
   title: SANITY_STUDIO_TITLE,
   projectId: SANITY_STUDIO_PROJECT_ID,
   dataset: SANITY_STUDIO_DATASET,
-  plugins: [deskTool(), visionTool()],
+  basePath: '/studio',
+  plugins: [
+    deskTool(),
+    visionTool(),
+  ],
   schema: {
     types: schemaTypes,
   },

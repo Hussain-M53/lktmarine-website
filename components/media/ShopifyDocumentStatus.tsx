@@ -1,82 +1,55 @@
-import {CloseIcon, ImageIcon, LinkRemovedIcon} from '@sanity/icons'
-import React, {forwardRef, useState} from 'react'
+import React from 'react'
+import Image from 'next/image'
+import { SanityDocument } from 'sanity'
 
-type Props = {
-  isActive?: boolean
-  isDeleted: boolean
-  type: 'collection' | 'product' | 'productVariant'
-  url: string
-  title: string
+interface Props {
+  document: SanityDocument & {
+    store?: {
+      id: number
+      status: string
+      isDeleted: boolean
+    }
+  }
 }
 
-const ShopifyDocumentStatus = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const {isActive, isDeleted, type, url, title} = props
+const ShopifyDocumentStatus = ({ document }: Props) => {
+  const isDeleted = document?.store?.isDeleted
+  const status = document?.store?.status
+  const id = document?.store?.id
 
-  const [imageVisible, setImageVisible] = useState(true)
-
-  // Hide image on error / 404
-  const handleImageError = () => setImageVisible(false)
+  if (!id || isDeleted) {
+    return (
+      <span className="text-red-500">
+        Not synced to Shopify
+      </span>
+    )
+  }
 
   return (
-    <div
-      ref={ref}
-      style={{
-        alignItems: 'center',
-        borderRadius: 'inherit',
-        display: 'flex',
-        height: '100%',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        width: '100%',
-      }}
-    >
-      {imageVisible && url ? (
-        <img
-          onError={handleImageError}
-          src={`${url}&width=400`}
-          style={{
-            height: '100%',
-            left: 0,
-            objectFit: 'contain',
-            position: 'absolute',
-            top: 0,
-            width: '100%',
-          }}
-          alt={`${title} preview`}
+    <div className="flex items-center space-x-2">
+      <div className="flex items-center">
+        <Image
+          src="/shopify.svg"
+          width={16}
+          height={16}
+          alt="Shopify logo"
+          className="w-4 h-4"
         />
-      ) : (
-        <ImageIcon style={{position: 'absolute'}} />
-      )}
-
-      {/* Item has been deleted */}
-      {isDeleted ? (
-        <CloseIcon
-          style={{
-            background: 'rgba(255, 0, 0, 0.7)',
-            color: 'rgba(255, 255, 255, 0.85)',
-            height: '100%',
-            position: 'relative',
-            width: '100%',
-          }}
-        />
-      ) : (
-        <>
-          {/* Products only: item is no longer active */}
-          {type === 'product' && !isActive && (
-            <LinkRemovedIcon
-              style={{
-                background: 'rgba(0, 0, 0, 0.7)',
-                color: 'rgba(255, 255, 255, 0.85)',
-                height: '100%',
-                position: 'relative',
-                width: '100%',
-              }}
-            />
-          )}
-        </>
-      )}
+      </div>
+      <span
+        className={
+          status === 'active'
+            ? 'text-green-500'
+            : 'text-yellow-500'
+        }
+      >
+        {status === 'active' ? 'Active' : 'Draft'}
+      </span>
     </div>
   )
-})
+}
+
+// Add display name
+ShopifyDocumentStatus.displayName = 'ShopifyDocumentStatus'
 
 export default ShopifyDocumentStatus

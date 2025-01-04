@@ -1,6 +1,6 @@
 import {HomeIcon} from '@sanity/icons'
 import {defineArrayMember, defineField} from 'sanity'
-import { GROUPS } from '../../constants'
+// import { GROUPS } from '../../constants'
 
 const TITLE = 'Home'
 
@@ -9,7 +9,7 @@ export const homeType = defineField({
   title: TITLE,
   type: 'document',
   icon: HomeIcon,
-  groups: GROUPS,
+  // groups: GROUPS,
   fields: [
     defineField({
       name: 'hero',

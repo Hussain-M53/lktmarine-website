@@ -1,55 +1,39 @@
 import React from 'react'
 import Image from 'next/image'
-import { SanityDocument } from 'sanity'
 
 interface Props {
-  document: SanityDocument & {
-    store?: {
-      id: number
-      status: string
-      isDeleted: boolean
-    }
-  }
+  isActive: boolean
+  isDeleted: boolean
+  type: 'product' | 'collection' | 'productVariant'
+  url?: string
+  title?: string
 }
 
-const ShopifyDocumentStatus = ({ document }: Props) => {
-  const isDeleted = document?.store?.isDeleted
-  const status = document?.store?.status
-  const id = document?.store?.id
-
-  if (!id || isDeleted) {
+const ShopifyDocumentStatus = ({ isActive, isDeleted, type, url, title }: Props) => {
+  if (isDeleted) {
     return (
       <span className="text-red-500">
-        Not synced to Shopify
+        Deleted from Shopify
       </span>
     )
   }
 
   return (
     <div className="flex items-center space-x-2">
-      <div className="flex items-center">
+      {url && (
         <Image
-          src="/shopify.svg"
-          width={16}
-          height={16}
-          alt="Shopify logo"
-          className="w-4 h-4"
+          src={url}
+          alt={title || 'Product image'}
+          width={32}
+          height={32}
+          className="rounded-sm object-cover"
         />
-      </div>
-      <span
-        className={
-          status === 'active'
-            ? 'text-green-500'
-            : 'text-yellow-500'
-        }
-      >
-        {status === 'active' ? 'Active' : 'Draft'}
+      )}
+      <span className={isActive ? 'text-green-500' : 'text-yellow-500'}>
+        {isActive ? 'Active' : 'Draft'}
       </span>
     </div>
   )
 }
-
-// Add display name
-ShopifyDocumentStatus.displayName = 'ShopifyDocumentStatus'
 
 export default ShopifyDocumentStatus

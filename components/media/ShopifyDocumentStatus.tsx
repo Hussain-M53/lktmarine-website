@@ -1,82 +1,39 @@
-import {CloseIcon, ImageIcon, LinkRemovedIcon} from '@sanity/icons'
-import React, {forwardRef, useState} from 'react'
+import React from 'react'
+import Image from 'next/image'
 
-type Props = {
-  isActive?: boolean
+interface Props {
+  isActive: boolean
   isDeleted: boolean
-  type: 'collection' | 'product' | 'productVariant'
-  url: string
-  title: string
+  type: 'product' | 'collection' | 'productVariant'
+  url?: string
+  title?: string
 }
 
-const ShopifyDocumentStatus = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const {isActive, isDeleted, type, url, title} = props
-
-  const [imageVisible, setImageVisible] = useState(true)
-
-  // Hide image on error / 404
-  const handleImageError = () => setImageVisible(false)
+const ShopifyDocumentStatus = ({ isActive, isDeleted, type, url, title }: Props) => {
+  if (isDeleted) {
+    return (
+      <span className="text-red-500">
+        Deleted from Shopify
+      </span>
+    )
+  }
 
   return (
-    <div
-      ref={ref}
-      style={{
-        alignItems: 'center',
-        borderRadius: 'inherit',
-        display: 'flex',
-        height: '100%',
-        justifyContent: 'center',
-        overflow: 'hidden',
-        width: '100%',
-      }}
-    >
-      {imageVisible && url ? (
-        <img
-          onError={handleImageError}
-          src={`${url}&width=400`}
-          style={{
-            height: '100%',
-            left: 0,
-            objectFit: 'contain',
-            position: 'absolute',
-            top: 0,
-            width: '100%',
-          }}
-          alt={`${title} preview`}
+    <div className="flex items-center space-x-2">
+      {url && (
+        <Image
+          src={url}
+          alt={title || 'Product image'}
+          width={32}
+          height={32}
+          className="rounded-sm object-cover"
         />
-      ) : (
-        <ImageIcon style={{position: 'absolute'}} />
       )}
-
-      {/* Item has been deleted */}
-      {isDeleted ? (
-        <CloseIcon
-          style={{
-            background: 'rgba(255, 0, 0, 0.7)',
-            color: 'rgba(255, 255, 255, 0.85)',
-            height: '100%',
-            position: 'relative',
-            width: '100%',
-          }}
-        />
-      ) : (
-        <>
-          {/* Products only: item is no longer active */}
-          {type === 'product' && !isActive && (
-            <LinkRemovedIcon
-              style={{
-                background: 'rgba(0, 0, 0, 0.7)',
-                color: 'rgba(255, 255, 255, 0.85)',
-                height: '100%',
-                position: 'relative',
-                width: '100%',
-              }}
-            />
-          )}
-        </>
-      )}
+      <span className={isActive ? 'text-green-500' : 'text-yellow-500'}>
+        {isActive ? 'Active' : 'Draft'}
+      </span>
     </div>
   )
-})
+}
 
 export default ShopifyDocumentStatus

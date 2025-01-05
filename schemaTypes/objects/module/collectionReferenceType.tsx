@@ -34,6 +34,7 @@ export const collectionReferenceType = defineField({
       return {
         media: (
           <ShopifyDocumentStatus
+            isActive
             isDeleted={isDeleted}
             type="collection"
             url={imageUrl}

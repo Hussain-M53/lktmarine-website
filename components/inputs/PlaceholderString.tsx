@@ -1,4 +1,3 @@
-import get from 'lodash.get'
 import {StringInputProps, useFormValue, Path} from 'sanity'
 
 type Props = StringInputProps & {

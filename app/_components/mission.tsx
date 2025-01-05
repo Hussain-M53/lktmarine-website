@@ -22,7 +22,7 @@ export function MissionAims() {
           
           <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
             <p className="text-lg md:text-xl text-gray-700 text-center max-w-3xl mx-auto">
-              "To be the leading provider of marine and industrial solutions, delivering excellence through quality products and unparalleled service to our global customers."
+            &quot;To be the leading provider of marine and industrial solutions, delivering excellence through quality products and unparalleled service to our global customers.&quot;
             </p>
           </div>
         </motion.div>

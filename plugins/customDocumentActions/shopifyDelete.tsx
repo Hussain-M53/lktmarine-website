@@ -8,7 +8,7 @@ import {
 } from 'sanity'
 import {useRouter} from 'sanity/router'
 import type {ShopifyDocument, ShopifyDocumentActionProps} from './types'
-import {SANITY_API_VERSION, SHOPIFY_STORE_ID} from '../../constants'
+import {SANITY_API_VERSION} from '../../constants'
 
 export default (props: ShopifyDocumentActionProps): DocumentActionDescription | undefined => {
   const {

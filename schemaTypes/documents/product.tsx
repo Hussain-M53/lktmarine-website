@@ -4,14 +4,14 @@ import ProductHiddenInput from '../../components/inputs/ProductHidden'
 import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
 import {defineField, defineType} from 'sanity'
 import {getPriceRange} from '../../utils/getPriceRange'
-import { GROUPS } from '../../constants'
+// import { GROUPS } from '../../constants'
 
 export const productType = defineType({
   name: 'product',
   title: 'Product',
   type: 'document',
   icon: TagIcon,
-  groups: GROUPS,
+  // groups: GROUPS,
   fields: [
     defineField({
       name: 'hidden',
@@ -19,7 +19,7 @@ export const productType = defineType({
       components: {
         field: ProductHiddenInput,
       },
-      group: GROUPS.map((group) => group.name),
+      // group: GROUPS.map((group) => group.name),
       hidden: ({parent}) => {
         const isActive = parent?.store?.status === 'active'
         const isDeleted = parent?.store?.isDeleted

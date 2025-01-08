@@ -1,20 +1,20 @@
 "use client";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 export default function AdminLogin() {
   const [error, setError] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
-  useEffect(() => {
-    // Check for error parameter in URL
-    const errorParam = searchParams.get('error');
-    if (errorParam === 'invalid_credentials') {
-      setError('Invalid username or password');
-    }
-  }, [searchParams]);
+  // useEffect(() => {
+  //   // Check for error parameter in URL
+  //   const errorParam = searchParams.get('error');
+  //   if (errorParam === 'invalid_credentials') {
+  //     setError('Invalid username or password');
+  //   }
+  // }, [searchParams]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

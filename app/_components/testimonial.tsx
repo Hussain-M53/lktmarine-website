@@ -1,4 +1,4 @@
-import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
+import { AnimatedTestimonials } from "@/studio/components/ui/animated-testimonials";
 
 export function Testimonial() {
   const testimonials = [

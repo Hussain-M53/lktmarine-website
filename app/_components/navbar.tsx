@@ -13,9 +13,10 @@ import {
 } from '@headlessui/react'
 import {
   Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
+  WrenchScrewdriverIcon,
+  SpeakerWaveIcon,
+  BoltIcon,
+  WrenchIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -26,17 +27,17 @@ import { usePathname } from 'next/navigation'
 const productCategories = [
   {
     name: 'Industrial',
-    href: '/product-category/industrial', icon: ChartPieIcon ,
+    href: '/site/product-category/industrial', icon: WrenchScrewdriverIcon ,
     subcategories: ['Climax Lubricant', 'Devcon', 'Lessmann Wire Brushes','Liquid Wrench','Molykote, Go, Carborundum, Molislip Copaslip','Trelawny Surface Preparation Equipment','Omega Air Hoist','Broco Prime Cut','Lead Ingots','Load Binders' ],
   },
   {
     name: 'Marine & Offshore',
-    href: '/product-category/marine-offshore', icon: CursorArrowRaysIcon ,
+    href: '/site/product-category/marine-offshore', icon: BoltIcon ,
     subcategories: ['Polypropylene Ropes, Manila Ropes & Jute Ropes','Galvanized Chains, Shackets & Hooks','3M Propeller Polishing Pads & Discs','AquaFix Pipe Repair Tapes','Broco Tactical','Broco Underwater', 'Kolor Kut Water & Oil Gauging Pastes','Cordobond USA','Polyform US','Posiedon Depp Water', 'RSC BIO Oils & Greases','Subsalve Liftings Bags','Trident Marine Systems Europe','Pilot Ladders, Gangway Ladders, Embarkations Ladders'],
   },
   {
     name: 'Deck & Engine Stores',
-    href: '/product-category/deck-engine-stores', icon: FingerPrintIcon ,
+    href: '/site/product-category/deck-engine-stores', icon:   WrenchIcon ,
     subcategories: ['Aluminum Port Holes','Anti Slip Tapes','Anti Splashing Tape','Boat Scrupper Plugs','Chains Blocks, Lever Blocks', 'Flags', 'Life Rings','Non Spark Shovels & Scoops','Oil Measuring Tapes', 'Oil Sampling Bottles', 'Petro Tapes', 'Swarfega Hand Cleaners','Thermometers Brass Case, Copper Case, Stainless Steel','Tools & Hardware'],
   },
 ]
@@ -93,11 +94,11 @@ export default function Navbar() {
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-1">
           <Link 
-            href="/" 
+            href="/site" 
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
               isScrolled ? 'text-gray-900' : 'text-[#024caa]'
             } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+            ${pathname === '/site' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
             Home
           </Link>
 
@@ -148,7 +149,7 @@ export default function Navbar() {
                         {item.subcategories.map((subcategory, index) => (
                           <Link 
                             key={index}
-                            href="#" 
+                            href={`/site/product-category/${subcategory}`} 
                             className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                           >
                             {subcategory}
@@ -167,26 +168,26 @@ export default function Navbar() {
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
               isScrolled ? 'text-gray-900' : 'text-gray-100'
             } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/services' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+            ${pathname === '#' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
             Blog
           </Link>
           
           <Link 
-            href="/about-us" 
+            href="/site/about-us" 
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
               isScrolled ? 'text-gray-900' : 'text-gray-100'
             } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/about' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+            ${pathname === '/site/about-us' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
             About Us
           </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link 
-            href="/contact" 
+            href="/site/contact" 
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
               isScrolled ? 'text-gray-900' : 'text-gray-100'
             } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/contact' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''} group`}>
+            ${pathname === '/site/contact' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''} group`}>
             Contact Us <span aria-hidden="true" className="group-hover:translate-x-1 inline-block transition-transform">&rarr;</span>
           </Link>
         </div>
@@ -195,7 +196,7 @@ export default function Navbar() {
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <Link href="/site" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <Image
                 alt=""
@@ -225,10 +226,10 @@ export default function Navbar() {
                   href="#"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
-                  Services
+                  Blog
                 </Link>
                 <Link
-                  href="#"
+                  href="/site/about-us"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   About Us
@@ -236,7 +237,7 @@ export default function Navbar() {
               </div>
               <div className="py-6">
                 <Link
-                  href="#"
+                  href="/site/contact"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Contact Us

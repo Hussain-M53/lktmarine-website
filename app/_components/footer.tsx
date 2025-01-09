@@ -1,6 +1,6 @@
 "use client";
-import { FloatingDock } from "@/components/ui/floating-dock";
-import WorldMap from "@/components/ui/world-map";
+import { FloatingDock } from "@/studio/components/ui/floating-dock";
+import WorldMap from "@/studio/components/ui/world-map";
 import { MapPinIcon, PhoneIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import Image from "next/image";
 import Link from 'next/link';

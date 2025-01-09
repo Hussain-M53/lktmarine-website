@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import React from "react";
-import { AuroraBackground } from "@/components/ui/aurora-background";
+import { AuroraBackground } from "@/studio/components/ui/aurora-background";
 import { CTAButton } from "./cta-button";
 
 export default function CTA() {

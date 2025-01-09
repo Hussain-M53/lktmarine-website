@@ -45,17 +45,17 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="bg-white flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="bg-white flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Image
           alt="Your Company"
           src="/Logo.svg"
           width={200}
           height={200}
-          className="mx-auto h-10 w-auto"
+          className="mx-auto h-16 w-auto"
         />
-        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-          Sign in to CMS
+        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-gray-800">
+          Sign in to LKT Marine CMS
         </h2>
       </div>
 

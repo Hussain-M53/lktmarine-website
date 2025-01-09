@@ -7,7 +7,7 @@ import {
 import shopifyDelete from './shopifyDelete'
 import shopifyLink from './shopifyLink'
 
-import {LOCKED_DOCUMENT_TYPES, SHOPIFY_DOCUMENT_TYPES} from '../../studio/constants'
+import {LOCKED_DOCUMENT_TYPES, SHOPIFY_DOCUMENT_TYPES} from '../../constants'
 
 export const resolveDocumentActions: DocumentActionsResolver = (prev, {schemaType}) => {
   if (LOCKED_DOCUMENT_TYPES.includes(schemaType)) {

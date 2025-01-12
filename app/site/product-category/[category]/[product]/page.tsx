@@ -12,15 +12,15 @@ interface Product {
   applications: string[];
 }
 
-interface PageProps {
+type Props = {
   params: {
     category: string;
     product: string;
   };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function ProductPage({ params, searchParams }: PageProps) {
+export default function ProductPage({ params }: Props) {
   const product: Product = {
     name: "CLIMAX CX-3 Industrial Grease",
     shortDescription: "High-Performance Multi-Purpose Industrial Grease",

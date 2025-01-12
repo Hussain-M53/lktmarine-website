@@ -61,10 +61,6 @@ export default function Navbar() {
       if (isStationary && currentScrollY > 0) {
         setIsVisible(false);
       }
-      // Show navbar when scrolling up
-      else if (!isScrollingDown) {
-        setIsVisible(true);
-      }
       // Hide navbar when scrolling down
       else {
         setIsVisible(false);

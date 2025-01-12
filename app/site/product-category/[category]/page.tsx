@@ -29,21 +29,21 @@ export default function ProductListing({ params }: { params: { category: string 
           {category.subCategories.map((subCategory) => (
             <Link
               key={subCategory.id}
-              href={`/site/product-category/${subCategory?.id}`}
+              href={`/site/product-category/${params.category}/${subCategory.id}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
                 <Image
-                  src={subCategory?.image}
-                  alt={subCategory?.name}
+                  src={subCategory.image}
+                  alt={subCategory.name}
                   width={500}
                   height={500}
                   className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium text-gray-900">{subCategory?.name}</h3>
-                <p className="mt-2 text-sm text-gray-500">{subCategory?.description}</p>
+                <h3 className="text-lg font-medium text-gray-900">{subCategory.name}</h3>
+                <p className="mt-2 text-sm text-gray-500">{subCategory.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Products</span>
                   <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

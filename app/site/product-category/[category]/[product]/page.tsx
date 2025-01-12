@@ -4,19 +4,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface Product {
   name: string;
-  description: string;
   shortDescription: string;
+  description: string;
   images: string[];
   specifications: Record<string, string>;
   features: string[];
   applications: string[];
 }
 
-export default function ProductPage({ 
-  params 
-}: { 
-  params: { category: string; product: string } 
-}) {
+interface PageProps {
+  params: {
+    category: string;
+    product: string;
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default async function ProductPage({ params, searchParams }: PageProps) {
   const product: Product = {
     name: "CLIMAX CX-3 Industrial Grease",
     shortDescription: "High-Performance Multi-Purpose Industrial Grease",

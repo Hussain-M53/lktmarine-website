@@ -12,15 +12,23 @@ interface Product {
   applications: string[];
 }
 
-type Props = {
-  params: {
-    category: string;
-    product: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+// Define the generateMetadata function to satisfy Next.js types
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: { category: string; product: string } 
+}) {
+  return {
+    title: `${params.product} - LKT Marine`,
+  }
 }
 
-export default function ProductPage({ params }: Props) {
+// Define the page component with proper types
+export default function ProductPage({ 
+  params,
+}: { 
+  params: { category: string; product: string } 
+}) {
   const product: Product = {
     name: "CLIMAX CX-3 Industrial Grease",
     shortDescription: "High-Performance Multi-Purpose Industrial Grease",

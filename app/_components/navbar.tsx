@@ -14,7 +14,6 @@ import {
 import {
   Bars3Icon,
   WrenchScrewdriverIcon,
-  SpeakerWaveIcon,
   BoltIcon,
   WrenchIcon,
   XMarkIcon,
@@ -27,18 +26,18 @@ import { usePathname } from 'next/navigation'
 const productCategories = [
   {
     name: 'Industrial',
-    href: '/site/product-category/industrial', icon: WrenchScrewdriverIcon ,
-    subcategories: ['Climax Lubricant', 'Devcon', 'Lessmann Wire Brushes','Liquid Wrench','Molykote, Go, Carborundum, Molislip Copaslip','Trelawny Surface Preparation Equipment','Omega Air Hoist','Broco Prime Cut','Lead Ingots','Load Binders' ],
+    href: '/site/product-category/industrial', icon: WrenchScrewdriverIcon,
+    subcategories: ['Climax Lubricant', 'Devcon', 'Lessmann Wire Brushes', 'Liquid Wrench', 'Molykote, Go, Carborundum, Molislip Copaslip', 'Trelawny Surface Preparation Equipment', 'Omega Air Hoist', 'Broco Prime Cut', 'Lead Ingots', 'Load Binders'],
   },
   {
     name: 'Marine & Offshore',
-    href: '/site/product-category/marine-offshore', icon: BoltIcon ,
-    subcategories: ['Polypropylene Ropes, Manila Ropes & Jute Ropes','Galvanized Chains, Shackets & Hooks','3M Propeller Polishing Pads & Discs','AquaFix Pipe Repair Tapes','Broco Tactical','Broco Underwater', 'Kolor Kut Water & Oil Gauging Pastes','Cordobond USA','Polyform US','Posiedon Depp Water', 'RSC BIO Oils & Greases','Subsalve Liftings Bags','Trident Marine Systems Europe','Pilot Ladders, Gangway Ladders, Embarkations Ladders'],
+    href: '/site/product-category/marine-offshore', icon: BoltIcon,
+    subcategories: ['Polypropylene Ropes, Manila Ropes & Jute Ropes', 'Galvanized Chains, Shackets & Hooks', '3M Propeller Polishing Pads & Discs', 'AquaFix Pipe Repair Tapes', 'Broco Tactical', 'Broco Underwater', 'Kolor Kut Water & Oil Gauging Pastes', 'Cordobond USA', 'Polyform US', 'Posiedon Depp Water', 'RSC BIO Oils & Greases', 'Subsalve Liftings Bags', 'Trident Marine Systems Europe', 'Pilot Ladders, Gangway Ladders, Embarkations Ladders'],
   },
   {
     name: 'Deck & Engine Stores',
-    href: '/site/product-category/deck-engine-stores', icon:   WrenchIcon ,
-    subcategories: ['Aluminum Port Holes','Anti Slip Tapes','Anti Splashing Tape','Boat Scrupper Plugs','Chains Blocks, Lever Blocks', 'Flags', 'Life Rings','Non Spark Shovels & Scoops','Oil Measuring Tapes', 'Oil Sampling Bottles', 'Petro Tapes', 'Swarfega Hand Cleaners','Thermometers Brass Case, Copper Case, Stainless Steel','Tools & Hardware'],
+    href: '/site/product-category/deck-engine-stores', icon: WrenchIcon,
+    subcategories: ['Aluminum Port Holes', 'Anti Slip Tapes', 'Anti Splashing Tape', 'Boat Scrupper Plugs', 'Chains Blocks, Lever Blocks', 'Flags', 'Life Rings', 'Non Spark Shovels & Scoops', 'Oil Measuring Tapes', 'Oil Sampling Bottles', 'Petro Tapes', 'Swarfega Hand Cleaners', 'Thermometers Brass Case, Copper Case, Stainless Steel', 'Tools & Hardware'],
   },
 ]
 
@@ -47,39 +46,77 @@ export default function Navbar() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
   const [isProductsOpen, setIsProductsOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
-      }
-    }
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY.current;
+      const isStationary = currentScrollY === lastScrollY.current;
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      // Hide navbar when not scrolling and not at top
+      if (isStationary && currentScrollY > 0) {
+        setIsVisible(false);
+      }
+      // Show navbar when scrolling up
+      else if (!isScrollingDown) {
+        setIsVisible(true);
+      }
+      // Hide navbar when scrolling down
+      else {
+        setIsVisible(false);
+      }
+
+      // Update scroll position state
+      setIsScrolled(currentScrollY > 0);
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Add timer to hide navbar when scrolling stops
+    let scrollTimer: NodeJS.Timeout;
+    const handleScrollEnd = () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        if (window.scrollY > 0) {
+          setIsVisible(false);
+        }
+      }, 1500); // Adjust timeout as needed (1.5 seconds)
+    };
+
+    window.addEventListener('scroll', handleScrollEnd);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScrollEnd);
+    };
+  }, []);
 
   return (
-    <header className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-sm shadow-md' 
-        : 'bg-transparent'
-    }`}>
+    <header
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-white/95 backdrop-blur-sm shadow-md'
+          : 'bg-transparent'
+        } ${isVisible
+          ? 'translate-y-0 opacity-100'
+          : '-translate-y-full opacity-0'
+        }`}
+    >
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         <div className="flex lg:flex-1">
           <Link href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <Image 
-                  src="/Logo.svg" 
-                  alt="Company Logo" 
-                  className=""
-                  width={150}
-                  height={150}
-                />
+            <Image
+              src="/Logo.svg"
+              alt="Company Logo"
+              className=""
+              width={150}
+              height={150}
+            />
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -93,12 +130,13 @@ export default function Navbar() {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-1">
-          <Link 
-            href="/site" 
-            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
-              isScrolled ? 'text-gray-900' : 'text-[#024caa]'
-            } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/site' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+          <Link
+            href="/site"
+            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform 
+                relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
+            ${pathname === '/site' ?
+                isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
+                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Home
           </Link>
 
@@ -108,23 +146,22 @@ export default function Navbar() {
                 setIsProductsOpen(false)
               }, 100)
             }}>
-            <PopoverButton 
+            <PopoverButton
               onMouseEnter={() => {
                 clearTimeout(timeoutRef.current)
                 setIsProductsOpen(true)
               }}
-              className={`px-4 py-2 flex items-center gap-x-1 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
-                isScrolled ? 'text-gray-900' : 'text-gray-100'
-              } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-              ${pathname.includes('/product-category') ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+              className={`px-4 py-2 flex items-center gap-x-1 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
+                ${pathname.includes('/site/product-category') ?
+                  isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
+                  : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
               Products
-              <ChevronDownIcon aria-hidden="true" className={`size-5 flex-none transition-colors ${
-                isScrolled ? 'text-gray-400' : 'text-gray-300'
-              }`} />
+              <ChevronDownIcon aria-hidden="true" className={`size-5 flex-none transition-colors ${isScrolled ? 'text-gray-400' : 'text-gray-300'
+                }`} />
             </PopoverButton>
 
             {isProductsOpen && (
-              <PopoverPanel 
+              <PopoverPanel
                 static
                 onMouseEnter={() => {
                   clearTimeout(timeoutRef.current)
@@ -147,9 +184,9 @@ export default function Navbar() {
                       </div>
                       <div className="pl-14 space-y-2">
                         {item.subcategories.map((subcategory, index) => (
-                          <Link 
+                          <Link
                             key={index}
-                            href={`/site/product-category/${subcategory}`} 
+                            href={`/site/product-category/${subcategory}`}
                             className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                           >
                             {subcategory}
@@ -163,31 +200,31 @@ export default function Navbar() {
             )}
           </Popover>
 
-          <Link 
-            href="#" 
-            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
-              isScrolled ? 'text-gray-900' : 'text-gray-100'
-            } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '#' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+          <Link
+            href="#"
+            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
+             ${pathname === '/site/blog' ?
+                isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
+                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Blog
           </Link>
-          
-          <Link 
-            href="/site/about-us" 
-            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
-              isScrolled ? 'text-gray-900' : 'text-gray-100'
-            } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/site/about-us' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''}`}>
+
+          <Link
+            href="/site/about-us"
+            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
+            ${pathname === '/site/about-us' ?
+                isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
+                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             About Us
           </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link 
-            href="/site/contact" 
-            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform ${
-              isScrolled ? 'text-gray-900' : 'text-gray-100'
-            } hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-            ${pathname === '/site/contact' ? 'bg-white/90 text-[#024caa] shadow-lg shadow-blue-100/50' : ''} group`}>
+          <Link
+            href="/site/contact"
+            className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
+             ${pathname === '/site/contact' ?
+                isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
+                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'} group`}>
             Contact Us <span aria-hidden="true" className="group-hover:translate-x-1 inline-block transition-transform">&rarr;</span>
           </Link>
         </div>

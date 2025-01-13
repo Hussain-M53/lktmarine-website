@@ -61,11 +61,9 @@ export default function Navbar() {
       if (isStationary && currentScrollY > 0) {
         setIsVisible(false);
       }
-      // Hide navbar when scrolling down
       else {
-        setIsVisible(false);
+        setIsVisible(true);
       }
-
       // Update scroll position state
       setIsScrolled(currentScrollY > 0);
       lastScrollY.current = currentScrollY;

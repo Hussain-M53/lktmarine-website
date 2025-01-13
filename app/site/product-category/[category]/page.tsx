@@ -1,13 +1,40 @@
 import Image from "next/image"
 import Link from "next/link"
 import { categories } from "@/data/categories"
+import { Metadata } from 'next'
 
-export default function ProductListing({ params }: { params: { category: string } }) {
+type PageProps = {
+  params: {
+    category: string;
+  };
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const category = categories[params.category as keyof typeof categories]
+  return {
+    title: `${category?.name || 'Category'} - LKT Marine`,
+    description: category?.description || 'Product category listing'
+  }
+}
+
+export default async function ProductListingByCategory({ params }: PageProps) {
+  const category = categories[params.category as keyof typeof categories]
+
+  if (!category) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Category Not Found</h1>
+          <Link href="/site" className="text-blue-600 hover:text-blue-800">
+            Return to Home
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-white">
-      {/* Hero Section */}
       <div className="relative bg-gray-900 h-[300px]">
         <Image
           src={category.image}

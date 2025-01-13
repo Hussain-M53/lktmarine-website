@@ -47,7 +47,6 @@ export const categories = {
         description: 'High-quality marine port holes',
         image: 'https://shahamanatcraftint.com/wp-content/uploads/engine.jpg'
       },
-      // Add more subcategories
     ]
   }
 } 

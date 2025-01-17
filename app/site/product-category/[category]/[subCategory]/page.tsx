@@ -1,7 +1,8 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
 import { categories } from "@/data/categories"
-import { Metadata } from 'next'
 import { getProductsBySubCategory } from "@/data/products"
 
 type PageProps = {
@@ -11,12 +12,12 @@ type PageProps = {
   };
 }
 
-export async function generateMetadata({ params }: { params: { category: string; subCategory: string; }; }): Promise<Metadata> {
-  return {
-    title: `${params?.category || 'Products'} - LKT Marine`,
-    description: params?.subCategory || 'Product listing',
-  };
-}
+// export async function generateMetadata({ params }: { params: { category: string; subCategory: string; }; }): Promise<Metadata> {
+//   return {
+//     title: `${params?.category || 'Products'} - LKT Marine`,
+//     description: params?.subCategory || 'Product listing',
+//   };
+// }
 
 export default async function ProductListingBySubCategory({ params }: PageProps) {
   const category = categories[params.category as keyof typeof categories]

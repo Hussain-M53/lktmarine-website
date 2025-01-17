@@ -1,8 +1,7 @@
-import { categories } from './categories'
-
 export interface Product {
   id: string;
   categoryId: string;
+  subCategoryId: string;
   name: string;
   shortDescription: string;
   description: string;
@@ -22,14 +21,15 @@ export const products: Record<string, Product> = {
   'climax-cx3-grease': {
     id: 'climax-cx3-grease',
     categoryId: 'industrial',
+    subCategoryId: 'climax-lubricant',
     name: "CLIMAX CX-3 Industrial Grease",
     shortDescription: "High-Performance Multi-Purpose Industrial Grease",
     description: "CLIMAX CX-3 is a premium quality multi-purpose industrial grease designed for heavy-duty applications. This advanced formulation provides exceptional protection against wear, rust, and corrosion while maintaining excellent stability under high temperatures and extreme pressure conditions.",
     images: [
-      "/products/climax-cx3-1.jpg",
-      "/products/climax-cx3-2.jpg",
-      "/products/climax-cx3-3.jpg",
-      "/products/climax-cx3-4.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRN6KPf1RiAVehp1TEDkqv7Vuw7CyY-17q4g&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3PJ1Fy3BedjqVe1Kc80pW74d0fBQa6_xdKA&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRN6KPf1RiAVehp1TEDkqv7Vuw7CyY-17q4g&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3PJ1Fy3BedjqVe1Kc80pW74d0fBQa6_xdKA&s",
     ],
     specifications: {
       "NLGI Grade": "2",
@@ -68,6 +68,7 @@ export const products: Record<string, Product> = {
   'lessmann-wire-brush-standard': {
     id: 'lessmann-wire-brush-standard',
     categoryId: 'industrial',
+    subCategoryId: 'wire-brushes',
     name: "Lessmann Standard Wire Brush",
     shortDescription: "Professional-Grade Steel Wire Brush",
     description: "Lessmann Standard Wire Brush is engineered for professional use, featuring high-quality steel bristles and ergonomic wooden handle. Perfect for cleaning, deburring, and surface preparation in industrial applications.",
@@ -105,6 +106,7 @@ export const products: Record<string, Product> = {
   'marine-polypropylene-rope': {
     id: 'marine-polypropylene-rope',
     categoryId: 'marine-offshore',
+    subCategoryId: 'ropes',
     name: "Heavy Duty Polypropylene Marine Rope",
     shortDescription: "Professional Marine-Grade Polypropylene Rope",
     description: "High-strength polypropylene rope specifically designed for marine applications. Features excellent UV resistance, low water absorption, and high breaking strength, making it ideal for various marine and offshore operations.",
@@ -150,6 +152,7 @@ export const products: Record<string, Product> = {
   'aluminum-porthole-standard': {
     id: 'aluminum-porthole-standard',
     categoryId: 'deck-engine-stores',
+    subCategoryId: 'port-holes',
     name: "Marine Aluminum Porthole - Standard Series",
     shortDescription: "Premium Quality Marine-Grade Aluminum Porthole",
     description: "Professional-grade aluminum porthole designed for marine vessels, featuring weather-tight construction, clear tempered glass, and corrosion-resistant materials. Engineered to meet international marine standards and provide long-lasting performance in harsh marine environments.",
@@ -203,9 +206,9 @@ export const products: Record<string, Product> = {
 }
 
 // Helper function to get product by category and product ID
-export function getProduct(categoryId: string, productId: string): Product | undefined {
+export function getProduct( productId: string): Product | undefined {
   return Object.values(products).find(
-    product => product.categoryId === categoryId && product.id === productId
+    product =>  product.id === productId
   );
 }
 
@@ -224,4 +227,11 @@ export function getRelatedProducts(product: Product, limit: number = 3): Product
       (p.categoryId === product.categoryId || product.relatedProducts?.includes(p.id))
     )
     .slice(0, limit);
+}
+
+// Updated function to filter by sub-category
+export function getProductsBySubCategory(categoryId: string, subCategoryId: string): Product[] {
+  return Object.values(products).filter(
+    product => product.categoryId === categoryId && product.subCategoryId === subCategoryId
+  );
 }

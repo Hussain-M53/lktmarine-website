@@ -100,7 +100,7 @@ export default function Navbar() {
           : '-translate-y-full opacity-0'
         }`}
     >
-      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+      <nav aria-label="Global" className="shadow-md mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         <div className="flex lg:flex-1">
           <Link href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
@@ -130,7 +130,7 @@ export default function Navbar() {
                 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
             ${pathname === '/site' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || pathname!='/site'? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Home
           </Link>
 
@@ -146,9 +146,9 @@ export default function Navbar() {
                 setIsProductsOpen(true)
               }}
               className={`px-4 py-2 flex items-center gap-x-1 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-                ${pathname.includes('/site/product-category') ?
+                ${pathname.includes('/site/product') ?
                   isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                  : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                  : isScrolled || pathname!='/site' ? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
               Products
               <ChevronDownIcon aria-hidden="true" className={`size-5 flex-none transition-colors ${isScrolled ? 'text-gray-400' : 'text-gray-300'
                 }`} />
@@ -180,7 +180,7 @@ export default function Navbar() {
                         {item.subcategories.map((subcategory, index) => (
                           <Link
                             key={index}
-                            href={`/site/product-category/${subcategory}`}
+                            href={`${item.href}/${subcategory}`}
                             className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                           >
                             {subcategory}
@@ -199,7 +199,7 @@ export default function Navbar() {
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
              ${pathname === '/site/blog' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || pathname!='/site'? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Blog
           </Link>
 
@@ -208,7 +208,7 @@ export default function Navbar() {
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
             ${pathname === '/site/about-us' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || pathname!='/site'? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             About Us
           </Link>
         </PopoverGroup>
@@ -218,7 +218,7 @@ export default function Navbar() {
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
              ${pathname === '/site/contact' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled ? 'text-gray-900' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'} group`}>
+                : isScrolled || pathname!='/site'? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'} group`}>
             Contact Us <span aria-hidden="true" className="group-hover:translate-x-1 inline-block transition-transform">&rarr;</span>
           </Link>
         </div>

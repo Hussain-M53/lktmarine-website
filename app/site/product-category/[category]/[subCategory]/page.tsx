@@ -2,30 +2,33 @@ import Image from "next/image"
 import Link from "next/link"
 import { categories } from "@/data/categories"
 import { Metadata } from 'next'
-import { getProductsByCategory } from "@/data/products"
+import { getProductsBySubCategory } from "@/data/products"
 
 type PageProps = {
   params: {
     category: string;
+    subCategory: string;
   };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const category = categories[params.category as keyof typeof categories]
   return {
-    title: `${category?.name || 'Category'} - LKT Marine`,
-    description: category?.description || 'Product category listing'
+    title: `${params?.category || 'Products'} - LKT Marine`,
+    description: params?.subCategory || 'Product listing'
   }
 }
 
-export default async function ProductListingByCategory({ params }: PageProps) {
+export default async function ProductListingBySubCategory({ params }: PageProps) {
   const category = categories[params.category as keyof typeof categories]
+  const subCategory = category?.subCategories.find(sub => sub.name === params.subCategory)
+  console.log(category?.subCategories);
+  console.log(params.subCategory);
 
-  if (!category) {
+  if (!category || !subCategory) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Category Not Found</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Products Not Found</h1>
           <Link href="/site" className="text-blue-600 hover:text-blue-800">
             Return to Home
           </Link>
@@ -33,8 +36,7 @@ export default async function ProductListingByCategory({ params }: PageProps) {
       </div>
     )
   }
-
-  const products = getProductsByCategory(params.category)
+  const products = getProductsBySubCategory(category?.id,subCategory?.id);
 
   return (
     <div className="bg-white">
@@ -54,12 +56,11 @@ export default async function ProductListingByCategory({ params }: PageProps) {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        {/* Products Grid */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <Link
               key={product.id}
-              href={`/site/product/${product.id}?category=${category?.id}`}
+              href={`/site/product/${product.id}?category=${subCategory?.id}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">

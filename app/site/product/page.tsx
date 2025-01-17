@@ -1,31 +1,23 @@
 import Image from "next/image"
 import Link from "next/link"
-import { categories } from "@/data/categories"
 import { Metadata } from 'next'
-import { getProductsByCategory } from "@/data/products"
+import { products } from "@/data/products"
 
-type PageProps = {
-  params: {
-    category: string;
-  };
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const category = categories[params.category as keyof typeof categories]
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `${category?.name || 'Category'} - LKT Marine`,
-    description: category?.description || 'Product category listing'
+    title: 'Products - LKT Marine',
+    description: 'Product listing'
   }
 }
 
-export default async function ProductListingByCategory({ params }: PageProps) {
-  const category = categories[params.category as keyof typeof categories]
+export default async function AllProductListing() {
+  const productsListing = products;
 
-  if (!category) {
+  if (!productsListing) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Category Not Found</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Products Not Found</h1>
           <Link href="/site" className="text-blue-600 hover:text-blue-800">
             Return to Home
           </Link>
@@ -34,32 +26,18 @@ export default async function ProductListingByCategory({ params }: PageProps) {
     )
   }
 
-  const products = getProductsByCategory(params.category)
-
   return (
     <div className="bg-white">
       <div className="relative bg-gray-900 h-[300px]">
-        <Image
-          src={category.image}
-          alt={category.name}
-          fill
-          className="object-cover opacity-50"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">{category.name}</h1>
-            <p className="text-lg text-gray-200">{category.description}</p>
-          </div>
-        </div>
+        <h1 className="text-4xl font-bold text-white mb-4 text-center">All Products</h1>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        {/* Products Grid */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {Object.values(productsListing)?.map((product : any) => (
             <Link
               key={product.id}
-              href={`/site/product/${product.id}?category=${category?.id}`}
+              href={`/site/product/${product.id}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">

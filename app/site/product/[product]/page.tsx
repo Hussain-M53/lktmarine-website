@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -6,26 +8,18 @@ import { getProduct } from "@/data/products";
 
 type PageParams = {
     params: {
-        category: string;
         product: string;
     };
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
-    const product = getProduct(params.category, params.product)
-
-    return {
-        title: product ? `${product.name} - LKT Marine` : 'Product Not Found',
-        description: product?.shortDescription || 'Product details page'
-    }
-}
 // Make the page component async to match Next.js types
 export default async function ProductPage({params}: PageParams) {
-    const product = getProduct(params.category, params.product)
+    const product = getProduct(params?.product)
+    const category = new URLSearchParams(window.location.search).get('category');
 
     if (!product) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-white">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-900">Product Not Found</h1>
                     <p className="mt-2 text-gray-600">The product you're looking for doesn't exist.</p>
@@ -44,11 +38,11 @@ export default async function ProductPage({params}: PageParams) {
         <div className="bg-gray-50">
             <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
                 {/* Breadcrumb */}
-                <nav className="mb-8">
+                <nav className="my-8">
                     <ol className="flex items-center space-x-2 text-sm text-gray-500">
-                        <li><Link href="/site/product-category" className="hover:text-blue-600">All Products</Link></li>
+                        <li><Link href="/site/product" className="hover:text-blue-600">All Products</Link></li>
                         <li>&gt;</li>
-                        <li><Link href={`/site/product-category/${params.category}`} className="hover:text-blue-600 capitalize">{params.category.replace('-', ' ')}</Link></li>
+                        <li><Link href={`/site/product-category/${category}`} className="hover:text-blue-600 capitalize">{category?.replace('-', ' ')}</Link></li>
                         <li>&gt;</li>
                         <li className="text-gray-900 font-medium">{product.name}</li>
                     </ol>

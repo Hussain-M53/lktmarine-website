@@ -11,11 +11,11 @@ type PageProps = {
   };
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { category: string; subCategory: string; }; }): Promise<Metadata> {
   return {
     title: `${params?.category || 'Products'} - LKT Marine`,
-    description: params?.subCategory || 'Product listing'
-  }
+    description: params?.subCategory || 'Product listing',
+  };
 }
 
 export default async function ProductListingBySubCategory({ params }: PageProps) {

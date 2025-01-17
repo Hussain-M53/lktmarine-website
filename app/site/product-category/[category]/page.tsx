@@ -4,11 +4,11 @@ import { categories } from "@/data/categories"
 import { Metadata } from 'next'
 import { getProductsByCategory } from "@/data/products"
 
-type PageProps = {
-    category: string;
-};
+// type PageProps = {
+//     category: string;
+// };
 
-export async function generateMetadata(params : PageProps): Promise<Metadata> {
+export async function generateMetadata(params : any): Promise<Metadata> {
   const category = categories[params.category as keyof typeof categories]
   return {
     title: `${category?.name || 'Category'} - LKT Marine`,
@@ -16,7 +16,7 @@ export async function generateMetadata(params : PageProps): Promise<Metadata> {
   }
 }
 
-export default async function ProductListingByCategory( params : PageProps) {
+export default async function ProductListingByCategory( params : any) {
   const category = categories[params.category as keyof typeof categories]
 
   if (!category) {

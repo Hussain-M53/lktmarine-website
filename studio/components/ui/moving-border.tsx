@@ -16,7 +16,7 @@ export function Button({
   as: Component = "button",
   containerClassName,
   borderClassName,
-  duration = 2000,
+  duration,
   className,
   ...otherProps
 }: {

@@ -49,11 +49,10 @@ export default function Quotation() {
                             </div>
                         </div>
 
-                        {/* Background Image */}
                         <div className="absolute inset-0 -z-10">
                             <div className="relative w-full h-full">
                                 <Image
-                                    src="/marine-equipment.jpg"
+                                    src="https://miro.medium.com/v2/resize:fit:3072/0*YBiL306qsgtjBevY"
                                     alt="Marine Equipment"
                                     fill
                                     className="object-cover opacity-10"

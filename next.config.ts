@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['miro.medium.com','tailwindui.com', 'images.unsplash.com','media.istockphoto.com','www.shutterstock.com','encrypted-tbn0.gstatic.com','media.licdn.com','assets.aceternity.com']
+    domains: ['shahamanatcraftint.com','img.freepik.com','miro.medium.com','tailwindui.com', 'images.unsplash.com','media.istockphoto.com','www.shutterstock.com','encrypted-tbn0.gstatic.com','media.licdn.com','assets.aceternity.com']
   },
   env: {
     ADMIN_USERNAME: process.env.ADMIN_USERNAME,

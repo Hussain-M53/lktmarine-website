@@ -7,6 +7,8 @@ import Link from 'next/link';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
+  IconBrandLinkedin,
+  IconBrandWhatsappFilled,
   IconBrandX,
 } from "@tabler/icons-react";
 
@@ -38,6 +40,20 @@ export function Footer() {
       title: "Twitter",
       icon: (
         <IconBrandX className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "LinkedIn",
+      icon: (
+        <IconBrandLinkedin className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "Whatsapp",
+      icon: (
+        <IconBrandWhatsappFilled className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: "#",
     },

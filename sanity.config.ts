@@ -2,12 +2,12 @@ import { defineConfig } from 'sanity'
 import { deskTool } from 'sanity/desk'
 import { visionTool } from '@sanity/vision'
 import { imageHotspotArrayPlugin } from 'sanity-plugin-hotspot-array'
-import { schemaTypes } from './schemas'
+import { schemaTypes } from './studio/schemaTypes'
 import {
   SANITY_STUDIO_TITLE,
   SANITY_STUDIO_PROJECT_ID,
   SANITY_STUDIO_DATASET
-} from './constants'
+} from './studio/constants'
 
 export default defineConfig({
   name: 'default',

@@ -6,14 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Metadata } from 'next'
 import { getProduct } from "@/data/products";
 
-type PageParams = {
-    params: {
-        product: string;
-    };
-}
+// type PageParams = {
+//     params: {
+//         product: string;
+//     };
+// }
 
 // Make the page component async to match Next.js types
-export default async function ProductPage({params}: PageParams) {
+export default async function ProductPage(params: any) {
     const product = getProduct(params?.product)
     const category = new URLSearchParams(window.location.search).get('category');
 

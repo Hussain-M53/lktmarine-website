@@ -5,12 +5,12 @@ import Link from "next/link"
 import { categories } from "@/data/categories"
 import { getProductsBySubCategory } from "@/data/products"
 
-type PageProps = {
-  params: {
-    category: string;
-    subCategory: string;
-  };
-}
+// type PageProps = {
+//   params: {
+//     category: string;
+//     subCategory: string;
+//   };
+// }
 
 // export async function generateMetadata({ params }: { params: { category: string; subCategory: string; }; }): Promise<Metadata> {
 //   return {
@@ -19,7 +19,7 @@ type PageProps = {
 //   };
 // }
 
-export default async function ProductListingBySubCategory({ params }: PageProps) {
+export default async function ProductListingBySubCategory(params : any) {
   const category = categories[params.category as keyof typeof categories]
   const subCategory = category?.subCategories.find(sub => sub.name === params.subCategory)
   console.log(category?.subCategories);

@@ -1,29 +1,30 @@
-'use client'
-
 import Image from "next/image"
 import Link from "next/link"
 import { categories } from "@/data/categories"
 import { getProductsBySubCategory } from "@/data/products"
+import { Metadata } from "next"
 
-// type PageProps = {
-//   params: {
-//     category: string;
-//     subCategory: string;
-//   };
-// }
+type PageProps = {
+  params: {
+    category: string;
+    subCategory: string;
+  };
+}
 
-// export async function generateMetadata({ params }: { params: { category: string; subCategory: string; }; }): Promise<Metadata> {
-//   return {
-//     title: `${params?.category || 'Products'} - LKT Marine`,
-//     description: params?.subCategory || 'Product listing',
-//   };
-// }
+export async function generateMetadata(params :any): Promise<Metadata> {
+  return {
+    title: `${params?.category || 'Products'} - LKT Marine`,
+    description: params?.subCategory || 'Product listing',
+  };
+}
 
-export default async function ProductListingBySubCategory(params : any) {
-  const category = categories[params.category as keyof typeof categories]
-  const subCategory = category?.subCategories.find(sub => sub.name === params.subCategory)
-  console.log(category?.subCategories);
-  console.log(params.subCategory);
+export default async function ProductListingBySubCategory({params} : { params: Promise<{ category: string , subCategory: string}>}) {
+
+  const category = categories[(await params).category as keyof typeof categories];
+  let param = (await params).subCategory;
+  const subCategory = category?.subCategories.find(sub => sub.name === param);
+  console.log(category);
+  console.log(subCategory);
 
   if (!category || !subCategory) {
     return (

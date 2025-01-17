@@ -54,7 +54,6 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const isScrollingDown = currentScrollY > lastScrollY.current;
       const isStationary = currentScrollY === lastScrollY.current;
 
       // Hide navbar when not scrolling and not at top
@@ -71,7 +70,6 @@ export default function Navbar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Add timer to hide navbar when scrolling stops
     let scrollTimer: NodeJS.Timeout;
     const handleScrollEnd = () => {
       clearTimeout(scrollTimer);
@@ -79,7 +77,7 @@ export default function Navbar() {
         if (window.scrollY > 0) {
           setIsVisible(false);
         }
-      }, 1500); // Adjust timeout as needed (1.5 seconds)
+      }, 1500);
     };
 
     window.addEventListener('scroll', handleScrollEnd);
@@ -130,7 +128,7 @@ export default function Navbar() {
                 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
             ${pathname === '/site' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled || pathname!='/site'? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || (pathname!='/site' )? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Home
           </Link>
 
@@ -169,18 +167,19 @@ export default function Navbar() {
                         <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white transition-colors">
                           <item.icon aria-hidden="true" className="h-8 w-8 text-gray-600 group-hover:text-[#024caa]" />
                         </div>
-                        <div className=''>
+                        <div onClick={() => setIsProductsOpen(false)}>
                           <Link href={item.href} className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors">
                             {item.name}
                             <span className="absolute inset-0" />
                           </Link>
                         </div>
                       </div>
-                      <div className="pl-14 space-y-2">
+                      <div className="pl-14 space-y-2" >
                         {item.subcategories.map((subcategory, index) => (
                           <Link
                             key={index}
                             href={`${item.href}/${subcategory}`}
+                            onClick={() => setIsProductsOpen(false)}
                             className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                           >
                             {subcategory}

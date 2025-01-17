@@ -21,7 +21,7 @@ export default async function ProductListingByCategory( params : any) {
 
   if (!category) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Category Not Found</h1>
           <Link href="/site" className="text-blue-600 hover:text-blue-800">

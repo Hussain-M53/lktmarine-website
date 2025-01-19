@@ -1,24 +1,29 @@
 import Image from "next/image"
 import Link from "next/link"
-import { categories } from "@/data/categories"
+import { categories } from "@/app/data/categories"
 import { Metadata } from 'next'
-import { getProductsByCategory } from "@/data/products"
+import { getProductsByCategory } from "@/app/data/products"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
-// type PageProps = {
-//     category: string;
-// };
-
-export async function generateMetadata(params : any): Promise<Metadata> {
-  const category = categories[params.category as keyof typeof categories]
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const category = categories[(await params).category as keyof typeof categories]
   return {
     title: `${category?.name || 'Category'} - LKT Marine`,
     description: category?.description || 'Product category listing'
   }
 }
 
-export default async function ProductListingByCategory( params : any) {
-  const category = categories[params.category as keyof typeof categories]
-
+export default async function ProductListingByCategory({ params }: { params: Promise<{ category: string }> }) {
+  const category = categories[(await params).category as keyof typeof categories]
+  console.log(category);
   if (!category) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -32,7 +37,7 @@ export default async function ProductListingByCategory( params : any) {
     )
   }
 
-  const products = getProductsByCategory(params.category)
+  const products = getProductsByCategory((await params).category)
 
   return (
     <div className="bg-white">
@@ -52,6 +57,13 @@ export default async function ProductListingByCategory( params : any) {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <nav className="my-8">
+          <ol className="flex items-center space-x-2 text-sm text-gray-500">
+            <li><Link href="/site/product" className="hover:text-blue-600">All Products</Link></li>
+            <li>&gt;</li>
+            <li className="hover:text-blue-600 capitalize">{category.name?.replace('-', ' ')}</li>
+          </ol>
+        </nav>
         {/* Products Grid */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
@@ -82,8 +94,31 @@ export default async function ProductListingByCategory( params : any) {
             </Link>
           ))}
         </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   )
 }
-  

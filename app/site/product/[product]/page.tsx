@@ -1,21 +1,17 @@
-'use client'
-
 import Image from "next/image"
 import Link from "next/link"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Metadata } from 'next'
-import { getProduct } from "@/data/products";
+import { getProduct, getProductsBySubCategory } from "@/app/data/products";
 
-// type PageParams = {
-//     params: {
-//         product: string;
-//     };
-// }
-
-// Make the page component async to match Next.js types
-export default async function ProductPage(params: any) {
-    const product = getProduct(params?.product)
-    const category = new URLSearchParams(window.location.search).get('category');
+export default async function ProductPage( {params} : { params: Promise<{ product: string }>}) {
+    const product = getProduct((await params).product)
+    const category = product?.categoryId;
+    const subCategory = product?.subCategoryId;
+console.log(category) 
+console.log(subCategory)
+    // Fetch related products from the same subcategory
+    const relatedProducts = getProductsBySubCategory(category  || '', subCategory || '').slice(0, 3);
 
     if (!product) {
         return (
@@ -137,7 +133,7 @@ export default async function ProductPage(params: any) {
                             <div className="border-t border-gray-200 pt-8">
                                 <Link
                                     href="/site/contact"
-                                    className="flex w-full items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-base font-medium text-white hover:bg-blue-700 transition-colors"
+                                    className="flex w-full items-center justify-center rounded-lg bg-[#024caa] px-8 py-4 text-base font-medium text-white hover:bg-blue-700 transition-colors"
                                 >
                                     Request Quotation
                                     <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -146,6 +142,40 @@ export default async function ProductPage(params: any) {
                                 </Link>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* Related Products Section */}
+                <div className="mt-16">
+                    <h2 className="text-2xl font-semibold text-white py-4 bg-[#024caa] text-center">Related Products</h2>
+                    <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 mt-6">
+                        {relatedProducts.map((relatedProduct) => (
+                            <Link
+                                key={relatedProduct.id}
+                                href={`/site/product/${relatedProduct.id}?category=${relatedProduct.subCategoryId}`}
+                                className="group block rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
+                            >
+                                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
+                                    <Image
+                                        src={relatedProduct.images[0]}
+                                        alt={relatedProduct.name}
+                                        width={500}
+                                        height={500}
+                                        className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
+                                    />
+                                </div>
+                                <div className="mt-4 p-4">
+                                    <h3 className="text-lg font-medium text-gray-900">{relatedProduct.name}</h3>
+                                    <p className="mt-2 text-sm text-gray-500">{relatedProduct.shortDescription}</p>
+                                    <div className="mt-4 flex items-center text-blue-600">
+                                        <span className="text-sm font-medium">View Details</span>
+                                        <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>

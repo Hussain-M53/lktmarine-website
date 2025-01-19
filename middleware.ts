@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { generateToken } from './studio/utils/auth';
+import { NextResponse,NextRequest } from 'next/server';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.SESSION_SECRET;
 
 export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
@@ -10,65 +11,32 @@ export async function middleware(request: NextRequest) {
     url.pathname = '/site';
     return NextResponse.redirect(url);
   }
-  // if (request.nextUrl.pathname.startsWith('/studio') || request.nextUrl.pathname.startsWith('/admin')) {
-  //   const tokenCookie = request.cookies.get('auth_token')
-    
-  //   if (tokenCookie) {
-  //     try {
-  //       const token = JSON.parse(tokenCookie.value);
-  //       if (Date.now() < token.expires) {
-  //         return NextResponse.next();
-  //       }
-  //     } catch (e) {
-  //     }
-  //   }
 
-  //   if (request.nextUrl.pathname === '/admin') {
-  //     return NextResponse.next();
-  //   }
+  if (pathname.startsWith('/studio')) {
+    const tokenCookie = request.cookies.get('auth_token');
+    console.log("token : " + tokenCookie)
+    if (!tokenCookie) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
 
-  //   const authHeader = request.headers.get('authorization')
+    try {
+      const token = JSON.parse(tokenCookie.value);
+      const decoded = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
 
-  //   if (!authHeader) {
-  //     return NextResponse.redirect(new URL('/admin', request.url))
-  //   }
+      // Check if token has expired
+      if (decoded.exp && Date.now() >= decoded.exp * 1000 && false) {
+        return NextResponse.redirect(new URL('/admin', request.url));
+      }
 
-  //   try {
-  //     const encoded = authHeader.split(' ')[1]
-  //     const decoded = atob(encoded)
-  //     const [username, password] = decoded.split(':')
+      return NextResponse.next();
+    } catch (error) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+  }
 
-  //     const correctUsername = process.env.ADMIN_USERNAME
-  //     const correctPassword = process.env.ADMIN_PASSWORD
-
-  //     if (username === correctUsername && password === correctPassword) {
-  //       const token = generateToken(username)
-
-  //       const response = NextResponse.next()
-        
-  //       response.cookies.set({
-  //         name: 'auth_token',
-  //         value: JSON.stringify(token),
-  //         httpOnly: true,
-  //         secure: process.env.NODE_ENV === 'production',
-  //         sameSite: 'lax',
-  //         maxAge: 60 
-  //       })
-
-  //       return response
-  //     }
-
-  //     const url = new URL('/admin', request.url)
-  //     url.searchParams.set('error', 'invalid_credentials')
-  //     return NextResponse.redirect(url)
-  //   } catch (error) {
-  //     return NextResponse.redirect(new URL('/admin', request.url))
-  //   }
-  // }
-
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/studio/:path*', '/admin/:path*','/']
-}    
+  matcher: ['/studio/:path*', '/admin/:path*', '/'],
+};

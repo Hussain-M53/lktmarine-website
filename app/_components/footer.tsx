@@ -135,6 +135,7 @@ export function Footer() {
                   className="bg-white text-white p-4 rounded-xl"
                   width={280}
                   height={280}
+                  priority
                 />
                 <h3 className="text-xl font-bold text-center">
                   LKT MARINE SERVICES LLC

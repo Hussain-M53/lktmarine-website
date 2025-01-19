@@ -1,7 +1,16 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Metadata } from 'next'
-import { products } from "@/data/products"
+import { products } from "@/app/data/products"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -29,7 +38,18 @@ export default async function AllProductListing() {
   return (
     <div className="bg-white">
       <div className="relative bg-gray-900 h-[300px]">
-        <h1 className="text-4xl font-bold text-white mb-4 text-center">All Products</h1>
+        {/* <Image
+          src={category.image}
+          alt={category.name}
+          fill
+          className="object-cover opacity-50"
+        /> */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-white mb-4">All Products</h1>
+            <p className="text-lg text-gray-200"></p>
+          </div>
+        </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
@@ -62,6 +82,30 @@ export default async function AllProductListing() {
             </Link>
           ))}
         </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   )

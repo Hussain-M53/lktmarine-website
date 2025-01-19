@@ -1,11 +1,9 @@
 import {Box, Button, Card, Flex} from '@sanity/ui'
 import type {NavbarProps} from 'sanity'
 
-import {SHOPIFY_STORE_ID} from '../../constants'
 import ShopifyIcon from '../icons/Shopify'
 
 export default function Navbar(props: NavbarProps) {
-  if (!SHOPIFY_STORE_ID) return props.renderDefault(props)
 
   return (
     <Card>
@@ -14,7 +12,7 @@ export default function Navbar(props: NavbarProps) {
         <Card paddingY={2} paddingRight={2} borderBottom={true}>
           <Button
             as="a"
-            href={`https://admin.shopify.com/store/${SHOPIFY_STORE_ID}`}
+            href={`https://admin.shopify.com/store`}
             mode="bleed"
             title="Open Shopify Admin"
             target="_blank"

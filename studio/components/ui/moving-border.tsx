@@ -8,7 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { useRef } from "react";
-import { cn } from "@/lib/util";
+import { cn } from "@/app/lib/util";
 
 export function Button({
   borderRadius = "1.75rem",

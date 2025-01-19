@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/util";
+import { cn } from "@/app/lib/util";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useEffect, useState } from "react";
 

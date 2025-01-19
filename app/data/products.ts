@@ -73,7 +73,7 @@ export const products: Record<string, Product> = {
     shortDescription: "Professional-Grade Steel Wire Brush",
     description: "Lessmann Standard Wire Brush is engineered for professional use, featuring high-quality steel bristles and ergonomic wooden handle. Perfect for cleaning, deburring, and surface preparation in industrial applications.",
     images: [
-      "/products/lessmann-brush-1.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRN6KPf1RiAVehp1TEDkqv7Vuw7CyY-17q4g&s",
       "/products/lessmann-brush-2.jpg",
       "/products/lessmann-brush-3.jpg"
     ],
@@ -111,7 +111,7 @@ export const products: Record<string, Product> = {
     shortDescription: "Professional Marine-Grade Polypropylene Rope",
     description: "High-strength polypropylene rope specifically designed for marine applications. Features excellent UV resistance, low water absorption, and high breaking strength, making it ideal for various marine and offshore operations.",
     images: [
-      "/products/marine-rope-1.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRN6KPf1RiAVehp1TEDkqv7Vuw7CyY-17q4g&s",
       "/products/marine-rope-2.jpg",
       "/products/marine-rope-3.jpg"
     ],
@@ -157,7 +157,7 @@ export const products: Record<string, Product> = {
     shortDescription: "Premium Quality Marine-Grade Aluminum Porthole",
     description: "Professional-grade aluminum porthole designed for marine vessels, featuring weather-tight construction, clear tempered glass, and corrosion-resistant materials. Engineered to meet international marine standards and provide long-lasting performance in harsh marine environments.",
     images: [
-      "/products/porthole-1.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRN6KPf1RiAVehp1TEDkqv7Vuw7CyY-17q4g&s",
       "/products/porthole-2.jpg",
       "/products/porthole-3.jpg"
     ],
@@ -206,9 +206,9 @@ export const products: Record<string, Product> = {
 }
 
 // Helper function to get product by category and product ID
-export function getProduct( productId: string): Product | undefined {
+export function getProduct(productId: string): Product | undefined {
   return Object.values(products).find(
-    product =>  product.id === productId
+    product => product.id === productId
   );
 }
 
@@ -222,8 +222,8 @@ export function getProductsByCategory(categoryId: string): Product[] {
 // Helper function to get related products
 export function getRelatedProducts(product: Product, limit: number = 3): Product[] {
   return Object.values(products)
-    .filter(p => 
-      p.id !== product.id && 
+    .filter(p =>
+      p.id !== product.id &&
       (p.categoryId === product.categoryId || product.relatedProducts?.includes(p.id))
     )
     .slice(0, limit);

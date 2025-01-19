@@ -1,7 +1,6 @@
 import {WarningOutlineIcon} from '@sanity/icons'
 import { useFormValue} from 'sanity'
 import {Box, Card, Flex, Stack, Text} from '@sanity/ui'
-import {productUrl} from '../../utils/shopifyUrls'
 
 type Store = {
   id: number
@@ -16,7 +15,6 @@ export default function ProductHiddenInput() {
   if (!store) {
     return <></>
   } else {
-    const shopifyProductUrl = productUrl(store?.id)
     const isActive = store?.status === 'active'
     const isDeleted = store?.isDeleted
 
@@ -46,16 +44,6 @@ export default function ProductHiddenInput() {
             <Stack marginTop={4} space={2}>
               <Text size={1}>{message}</Text>
             </Stack>
-            {!isDeleted && shopifyProductUrl && (
-              <Box marginTop={4}>
-                <Text size={1}>
-                  →{' '}
-                  <a href={shopifyProductUrl} target="_blank" rel="noreferrer">
-                    View this product on Shopify
-                  </a>
-                </Text>
-              </Box>
-            )}
           </Box>
         </Flex>
       </Card>

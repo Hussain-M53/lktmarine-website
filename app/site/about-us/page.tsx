@@ -6,7 +6,8 @@ import AboutUs from '@/app/_components/aboutUs';
 
 export default function About() {
   return (
-    <div className="">
+    <div className="bg-white">
+      <div  className='pb-20'/>
         <AboutUs/>
         <MissionAims/>
     </div>

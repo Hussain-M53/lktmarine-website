@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "./_components/navbar";
+import Head from "next/head";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -21,6 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <Head>
+      <link rel="icon" href="/favicon.png" sizes="512x512" />
+      </Head>
       <body className={`${poppins.variable} font-sans antialiased`}>
         {children}
       </body>

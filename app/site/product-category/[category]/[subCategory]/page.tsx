@@ -1,24 +1,27 @@
 import Image from "next/image"
 import Link from "next/link"
-import { categories } from "@/data/categories"
-import { getProductsBySubCategory } from "@/data/products"
+import { categories } from "@/app/data/categories"
+import { getProductsBySubCategory } from "@/app/data/products"
 import { Metadata } from "next"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
-type PageProps = {
-  params: {
-    category: string;
-    subCategory: string;
-  };
-}
 
-export async function generateMetadata(params :any): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ category: string, subCategory: string }> }): Promise<Metadata> {
   return {
-    title: `${params?.category || 'Products'} - LKT Marine`,
-    description: params?.subCategory || 'Product listing',
+    title: `${(await params).category || 'Products'} - LKT Marine`,
+    description: (await params).subCategory || 'Product listing',
   };
 }
 
-export default async function ProductListingBySubCategory({params} : { params: Promise<{ category: string , subCategory: string}>}) {
+export default async function ProductListingBySubCategory({ params }: { params: Promise<{ category: string, subCategory: string }> }) {
 
   const category = categories[(await params).category as keyof typeof categories];
   let param = (await params).subCategory;
@@ -38,7 +41,7 @@ export default async function ProductListingBySubCategory({params} : { params: P
       </div>
     )
   }
-  const products = getProductsBySubCategory(category?.id,subCategory?.id);
+  const products = getProductsBySubCategory(category?.id, subCategory?.id);
 
   return (
     <div className="bg-white">
@@ -51,13 +54,22 @@ export default async function ProductListingBySubCategory({params} : { params: P
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">{category.name}</h1>
-            <p className="text-lg text-gray-200">{category.description}</p>
+            <h1 className="text-4xl font-bold text-white mb-4">{subCategory?.name}</h1>
+            <p className="text-lg text-gray-200">{subCategory?.description}</p>
           </div>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <nav className="my-8">
+          <ol className="flex items-center space-x-2 text-sm text-gray-500">
+            <li><Link href="/site/product" className="hover:text-blue-600">All Products</Link></li>
+            <li>&gt;</li>
+            <li><Link href="/site/product" className="hover:text-blue-600 capitalize">{category.name?.replace('-', ' ')}</Link></li>
+            <li>&gt;</li>
+            <li className="hover:text-blue-600 capitalize">{subCategory.name?.replace('-', ' ')}</li>
+          </ol>
+        </nav>
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product) => (
             <Link
@@ -87,8 +99,31 @@ export default async function ProductListingBySubCategory({params} : { params: P
             </Link>
           ))}
         </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   )
 }
-  

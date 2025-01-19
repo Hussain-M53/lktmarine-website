@@ -13,9 +13,13 @@ export default {
   ],
   theme: {
   	extend: {
-		fontFamily: {
-			sans: ["var(--font-poppins)", "system-ui", "sans-serif"],
-		  },
+  		fontFamily: {
+  			sans: [
+  				'var(--font-poppins)',
+  				'system-ui',
+  				'sans-serif'
+  			]
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -58,26 +62,28 @@ export default {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
-		animation: {
-			aurora: "aurora 60s linear infinite",
-			marquee: 'marquee 40s linear infinite',
-		},
-		keyframes: {
-			
-
-			aurora: {
-			  from: {
-				backgroundPosition: "50% 50%, 50% 50%",
-			  },
-			  to: {
-				backgroundPosition: "350% 50%, 350% 50%",
-			  },
-			},
-			marquee: {
-			  '0%': { transform: 'translateX(0%)' },
-			  '100%': { transform: 'translateX(-100%)' },
-			},
-		},
+  		animation: {
+  			aurora: 'aurora 60s linear infinite',
+  			marquee: 'marquee 40s linear infinite'
+  		},
+  		keyframes: {
+  			aurora: {
+  				from: {
+  					backgroundPosition: '50% 50%, 50% 50%'
+  				},
+  				to: {
+  					backgroundPosition: '350% 50%, 350% 50%'
+  				}
+  			},
+  			marquee: {
+  				'0%': {
+  					transform: 'translateX(0%)'
+  				},
+  				'100%': {
+  					transform: 'translateX(-100%)'
+  				}
+  			}
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

@@ -12,7 +12,7 @@ export default function Navbar(props: NavbarProps) {
         <Card paddingY={2} paddingRight={2} borderBottom={true}>
           <Button
             as="a"
-            href={`https://admin.shopify.com/store/${SHOPIFY_STORE_ID}`}
+            href={`https://admin.shopify.com/store`}
             mode="bleed"
             title="Open Shopify Admin"
             target="_blank"

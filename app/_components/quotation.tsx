@@ -10,17 +10,17 @@ export default function Quotation() {
                 <div className="relative px-6 lg:px-8 flex items-center bg-gray-50">
                     <div className="relative mx-auto max-w-xl py-16 lg:py-0">
                         <div className="relative z-10">
-                            <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                            <h2 className="text-center md:text-left text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
                                 Get Your Custom <br />
                                 <span className="text-blue-600">Marine Equipment</span> Quote
                             </h2>
-                            <p className="mt-6 text-lg leading-8 text-gray-600">
+                            <p className="text-center md:text-left mt-6 text-lg leading-8 text-gray-600">
                                 Looking for high-quality marine equipment and services? Fill out our quote form, and our experts will provide you with competitive pricing tailored to your specific needs.
                             </p>
 
                             {/* Feature list */}
                             <div className="mt-8">
-                                <ul className="space-y-4">
+                                <ul className="flex flex-col items-center md:items-start space-y-4">
                                     <li className="flex items-center gap-x-3">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10">
                                             <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

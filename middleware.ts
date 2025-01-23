@@ -14,22 +14,22 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.startsWith('/studio')) {
     const tokenCookie = request.cookies.get('auth_token');
-    console.log("token : " + tokenCookie)
     if (!tokenCookie) {
       return NextResponse.redirect(new URL('/admin', request.url));
     }
 
     try {
-      const token = JSON.parse(tokenCookie.value);
+      const token = tokenCookie.value;
       const decoded = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
 
-      // Check if token has expired
-      if (decoded.exp && Date.now() >= decoded.exp * 1000 && false) {
+      if (decoded.exp && Date.now() >= decoded.exp * 1000) {
+        console.log('second')
         return NextResponse.redirect(new URL('/admin', request.url));
       }
 
       return NextResponse.next();
     } catch (error) {
+      console.log("last",error)
       return NextResponse.redirect(new URL('/admin', request.url));
     }
   }

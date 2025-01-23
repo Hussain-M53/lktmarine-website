@@ -21,6 +21,7 @@ export const AnimatedTestimonials = ({
   const [active, setActive] = useState(0);
 
   const handleNext = () => {
+    console.log("Changing to next testimonial");
     setActive((prev) => (prev + 1) % testimonials.length);
   };
 
@@ -34,17 +35,20 @@ export const AnimatedTestimonials = ({
 
   useEffect(() => {
     if (autoplay) {
-      const interval = setInterval(handleNext, 5000);
+      const interval = setInterval(() => {
+        handleNext(); 
+      }, 2000);
+  
       return () => clearInterval(interval);
     }
-  }, [autoplay]);
+  }, [autoplay, active]);
 
   const randomRotateY = () => {
     return Math.floor(Math.random() * 21) - 10;
   };
   return (
     <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-12">
-      <div className="relative grid grid-cols-1 md:grid-cols-2  gap-20">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-20">
         <div>
           <div className="relative h-80 w-full">
             <AnimatePresence>
@@ -112,13 +116,13 @@ export const AnimatedTestimonials = ({
               ease: "easeInOut",
             }}
           >
-            <h3 className="text-2xl font-bold text-white">
+            <h3 className="text-2xl font-bold text-white text-center md:text-left">
               {testimonials[active].name}
             </h3>
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-gray-300 text-center md:text-left">
               {testimonials[active].designation}
             </p>
-            <motion.p className="text-lg mt-8 text-neutral-300">
+            <motion.p className="text-lg mt-8 text-neutral-300 text-center md:text-left">
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -144,7 +148,7 @@ export const AnimatedTestimonials = ({
               ))}
             </motion.p>
           </motion.div>
-          <div className="flex gap-4 pt-12 md:pt-0">
+          <div className="flex gap-4 pt-12 md:pt-0 justify-center md:text-left">
             <button
               onClick={handlePrev}
               className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"

@@ -6,6 +6,7 @@ import {
   DialogPanel,
   Disclosure,
   DisclosureButton,
+  DisclosurePanel,
   Popover,
   PopoverButton,
   PopoverGroup,
@@ -90,8 +91,8 @@ export default function Navbar() {
     <header
       onMouseOver={() => setIsVisible(true)}
       className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-white/95 backdrop-blur-sm shadow-md'
-          : 'bg-transparent'
+        ? 'bg-white/95 backdrop-blur-sm shadow-md'
+        : 'bg-transparent'
         } ${isVisible
           ? 'translate-y-0 opacity-100'
           : '-translate-y-full opacity-0'
@@ -115,20 +116,19 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-          >
+            className={`-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 ${isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/') ? 'text-gray-700' : 'text-white'}`}>
             <span className="sr-only">Open main menu</span>
             <Bars3Icon aria-hidden="true" className="size-6" />
           </button>
         </div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-1">
+        <PopoverGroup className="hidden lg:flex lg:gap-x-2">
           <Link
             href="/site"
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform 
                 relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
             ${pathname === '/site' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/')? 'text-gray-900 hover:text-[#024caa]' : 'text-white  hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/') ? 'text-gray-900 hover:text-[#024caa]' : 'text-white  hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Home
           </Link>
 
@@ -138,19 +138,22 @@ export default function Navbar() {
                 setIsProductsOpen(false)
               }, 100)
             }}>
-            <PopoverButton
-              onMouseEnter={() => {
-                clearTimeout(timeoutRef.current)
-                setIsProductsOpen(true)
-              }}
-              className={`px-4 py-2 flex items-center gap-x-1 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
-                ${pathname.includes('/site/product') ?
-                  isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                  : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/')? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
-              Products
-              <ChevronDownIcon aria-hidden="true" className={`size-5 flex-none transition-colors ${isScrolled ? 'text-gray-400' : 'text-gray-300'
-                }`} />
-            </PopoverButton>
+            <Link href="/site/product">
+              <PopoverButton
+                onMouseEnter={() => {
+                  clearTimeout(timeoutRef.current)
+                  setIsProductsOpen(true)
+                }}
+                className={`px-4 py-2 flex items-center gap-x-1 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
+                  ${pathname.includes('/site/product') ?
+                    isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
+                    : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/') ? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                Products
+                <ChevronDownIcon aria-hidden="true" className={`size-5 flex-none transition-colors ${isScrolled ? 'text-gray-400' : 'text-gray-300'
+                  }`} />
+              </PopoverButton>
+            </Link>
+
 
             {isProductsOpen && (
               <PopoverPanel
@@ -198,7 +201,7 @@ export default function Navbar() {
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
              ${pathname === '/site/blog' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/')? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/') ? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             Blog
           </Link>
 
@@ -207,7 +210,7 @@ export default function Navbar() {
             className={`px-4 py-2 text-sm font-semibold rounded-md transition-all duration-300 ease-in-out transform relative after:absolute after:inset-0 after:rounded-md after:opacity-0 after:transition-opacity after:duration-300 hover:after:opacity-100 after:bg-gradient-to-r after:from-blue-50/50 after:to-transparent after:-z-10
             ${pathname === '/site/about-us' ?
                 isScrolled ? 'scale-105 text-[#024caa]' : 'scale-105 text-[#024caa] bg-white/90 shadow-blue-100/50 shadow-lg '
-                : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/')? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
+                : isScrolled || pathname == '/site/about-us' || pathname == '/site/contact' || pathname.includes('/site/product/') ? 'text-gray-900 hover:text-[#024caa]' : 'text-white hover:text-[#024caa] hover:bg-white/90 hover:scale-105 hover:shadow-lg hover:shadow-blue-100/50'}`}>
             About Us
           </Link>
         </PopoverGroup>
@@ -222,7 +225,7 @@ export default function Navbar() {
           </Link>
         </div>
       </nav>
-      <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
+      <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden text-white">
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
@@ -232,6 +235,8 @@ export default function Navbar() {
                 alt=""
                 src="/logo.svg"
                 className="h-8 w-auto"
+                width={8}
+                height={8}
               />
             </Link>
             <button
@@ -246,26 +251,64 @@ export default function Navbar() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
+                <Link
+                  href="/site"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                >
+                  Home
+                </Link>
                 <Disclosure as="div" className="-mx-3">
-                  <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
-                    Products
-                    <ChevronDownIcon aria-hidden="true" className="size-5 flex-none group-data-[open]:rotate-180" />
-                  </DisclosureButton>
+                  <Link href={'/site/product'}>
+                    <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
+                      Products
+                      <ChevronDownIcon aria-hidden="true" className="size-5 flex-none group-data-[open]:rotate-180" />
+                    </DisclosureButton>
+                  </Link>
+                  <DisclosurePanel className="pl-6">
+                    <div className="space-y-2">
+                      {productCategories.map((item) => (
+                        <div key={item.name} className="flex flex-col">
+                          <Link
+                            href={item.href}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors"
+                          >
+                            {item.name}
+                          </Link>
+                          <div className="pl-4 space-y-1">
+                            {item.subcategories.map((subcategory, index) => (
+                              <Link
+                                key={index}
+                                href={`${item.href}/${subcategory}`}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
+                              >
+                                {subcategory}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </DisclosurePanel>
                 </Disclosure>
                 <Link
                   href="#"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   Blog
                 </Link>
                 <Link
                   href="/site/about-us"
+                  onClick={() => setMobileMenuOpen(false)}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                 >
                   About Us
                 </Link>
               </div>
-              <div className="py-6">
+              <div className="py-6" onClick={() => setMobileMenuOpen(false)}>
                 <Link
                   href="/site/contact"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"

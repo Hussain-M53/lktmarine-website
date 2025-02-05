@@ -2,77 +2,75 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {PackageIcon} from '@sanity/icons'
 import {getExtension} from '@sanity/asset-utils'
-import pluralize from 'pluralize-esm'
-import CollectionHiddenInput from '../../components/inputs/CollectionHidden'
-import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
-// import { GROUPS } from '../../constants'
+import { GROUPS } from '../../constants'
 
 export const collectionType = defineType({
   name: 'collection',
   title: 'Collection',
   type: 'document',
   icon: PackageIcon,
-  // groups: GROUPS,
+  groups: GROUPS,
   fields: [
     defineField({
-      name: 'hidden',
-      type: 'string',
-      components: {
-        field: CollectionHiddenInput,
-      },
-      hidden: ({parent}) => {
-        const isDeleted = parent?.store?.isDeleted
-        return !isDeleted
-      },
-    }),
-    defineField({
-      name: 'titleProxy',
+      name: 'title',
       title: 'Title',
-      type: 'proxyString',
-      options: {field: 'store.title'},
+      type: 'string',
     }),
     defineField({
-      name: 'slugProxy',
+      name: 'slug',
       title: 'Slug',
-      type: 'proxyString',
-      options: {field: 'store.slug.current'},
+      type: 'string',
+    }),
+    defineField({
+      name: 'vector',
+      title: 'Vector artwork',
+      type: 'image',
+      description: 'Displayed in collection links using color theme',
+      options: {
+        accept: 'image/svg+xml',
+      },
+      group: 'theme',
+      validation: (Rule) =>
+        Rule.custom((image) => {
+          if (!image?.asset?._ref) {
+            return true
+          }
+
+          const format = getExtension(image.asset._ref)
+
+          if (format !== 'svg') {
+            return 'Image must be an SVG'
+          }
+          return true
+        }),
+    }),
+    defineField({
+      name: 'showHero',
+      type: 'boolean',
+      description: 'If disabled, page title will be displayed instead',
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'hero',
+      type: 'hero',
+      hidden: ({document}) => !document?.showHero,
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'modules',
+      type: 'array',
+      description: 'Editorial modules to associate with this collection',
+      of: [
+        defineArrayMember({type: 'callToAction'}),
+        defineArrayMember({type: 'image'}),
+      ],
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
     }),
   ],
-  orderings: [
-    {
-      name: 'titleAsc',
-      title: 'Title (A-Z)',
-      by: [{field: 'store.title', direction: 'asc'}],
-    },
-    {
-      name: 'titleDesc',
-      title: 'Title (Z-A)',
-      by: [{field: 'store.title', direction: 'desc'}],
-    },
-  ],
-  preview: {
-    select: {
-      imageUrl: 'store.imageUrl',
-      isDeleted: 'store.isDeleted',
-      rules: 'store.rules',
-      title: 'store.title',
-    },
-    prepare({imageUrl, isDeleted, rules, title}) {
-      const ruleCount = rules?.length || 0
-
-      return {
-        media: (
-          <ShopifyDocumentStatus
-            isActive
-            isDeleted={isDeleted}
-            type="collection"
-            url={imageUrl}
-            title={title}
-          />
-        ),
-        subtitle: ruleCount > 0 ? `Automated (${pluralize('rule', ruleCount, true)})` : 'Manual',
-        title,
-      }
-    },
-  },
 })

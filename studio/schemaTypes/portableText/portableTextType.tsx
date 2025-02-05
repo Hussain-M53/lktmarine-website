@@ -21,21 +21,19 @@ export const portableTextType = defineField({
           },
         ],
         annotations: [
+         
           {
-            name: 'linkProduct',
-            type: 'linkProduct',
+            name: 'linkInternal',
+            type: 'linkInternal',
           },
          
         ],
       },
       type: 'block',
     }),
-    defineArrayMember({ type: 'accordion' }),
-    defineArrayMember({ type: 'callout' }),
     defineArrayMember({ type: 'grid' }),
     defineArrayMember({ type: 'images' }),
     defineArrayMember({ type: 'imageWithProductHotspots', title: 'Image with Hotspots' }),
-    defineArrayMember({ type: 'instagram' }),
     defineArrayMember({ type: 'products' }),
   ],
 })

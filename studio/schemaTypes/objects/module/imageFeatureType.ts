@@ -48,33 +48,5 @@ export const imageFeatureType = defineField({
       type: 'productHotspots',
       hidden: ({parent}) => parent.variant !== 'productHotspots',
     }),
-    defineField({
-      name: 'productTags',
-      title: 'Products',
-      type: 'array',
-      hidden: ({parent}) => parent.variant !== 'productTags',
-      of: [
-        defineField({
-          name: 'productWithVariant',
-          type: 'productWithVariant',
-        }),
-      ],
-    }),
   ],
-  preview: {
-    select: {
-      fileName: 'image.asset.originalFilename',
-      image: 'image',
-      variant: 'variant',
-    },
-    prepare({fileName, image, variant}) {
-      const currentVariant = VARIANTS.find((v) => v.value === variant)
-
-      return {
-        media: image,
-        subtitle: 'Image' + (currentVariant ? ` [${currentVariant.title}]` : ''),
-        title: fileName,
-      }
-    },
-  },
 })

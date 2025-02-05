@@ -1,8 +1,8 @@
-import Image from "next/image"
-import Link from "next/link"
-import { categories } from "@/app/data/categories"
-import { Metadata } from 'next'
-import { getProductsByCategory } from "@/app/data/products"
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Metadata } from "next";
+import { sanityClient } from "@/app/lib/sanityClient"; // Replace with your API client
 import {
   Pagination,
   PaginationContent,
@@ -11,19 +11,44 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
-export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
-  const category = categories[(await params).category as keyof typeof categories]
+// Fetch categories (static or from backend)
+const categories = [
+  {
+    id: "marine",
+    name: "Marine Solutions",
+    description: "Complete range of marine equipment and spare parts.",
+    image: "https://example.com/marine.jpg",
+  },
+  // Add other categories here
+];
+
+// Metadata for SEO
+export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
+  const category = categories.find((c) => c.id === params.category);
   return {
-    title: `${category?.name || 'Category'} - LKT Marine`,
-    description: category?.description || 'Product category listing'
-  }
+    title: `${category?.name || "Category"} - LKT Marine`,
+    description: category?.description || "Product category listing",
+  };
 }
 
-export default async function ProductListingByCategory({ params }: { params: Promise<{ category: string }> }) {
-  const category = categories[(await params).category as keyof typeof categories]
-  console.log(category);
+// Fetch products by category
+async function fetchProductsByCategory(categoryId: string) {
+  const query = `*[_type == "product" && references(*[_type=="productCategory" && id=="${categoryId}"]._id)] {
+    _id,
+    name,
+    shortDescription,
+    "images": images[].asset->url
+  }`;
+
+  const products = await sanityClient.fetch(query); // Replace with your API client
+  return products;
+}
+
+export default async function ProductListingByCategory({ params }: { params: { category: string } }) {
+  const category = categories.find((c) => c.id === params.category);
+
   if (!category) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -34,20 +59,16 @@ export default async function ProductListingByCategory({ params }: { params: Pro
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
-  const products = getProductsByCategory((await params).category)
+  const products = await fetchProductsByCategory(params.category);
 
   return (
     <div className="bg-white">
+      {/* Header with Category Details */}
       <div className="relative bg-gray-900 h-[300px]">
-        <Image
-          src={category.image}
-          alt={category.name}
-          fill
-          className="object-cover opacity-50"
-        />
+        <Image src={category.image} alt={category.name} fill className="object-cover opacity-50" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">{category.name}</h1>
@@ -56,20 +77,26 @@ export default async function ProductListingByCategory({ params }: { params: Pro
         </div>
       </div>
 
+      {/* Product Listing */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <nav className="my-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
-            <li><Link href="/site/product" className="hover:text-blue-600">All Products</Link></li>
+            <li>
+              <Link href="/site/product" className="hover:text-blue-600">
+                All Products
+              </Link>
+            </li>
             <li>&gt;</li>
-            <li className="hover:text-blue-600 capitalize">{category.name?.replace('-', ' ')}</li>
+            <li className="hover:text-blue-600 capitalize">{category.name?.replace("-", " ")}</li>
           </ol>
         </nav>
+
         {/* Products Grid */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {products.map((product: any) => (
             <Link
-              key={product.id}
-              href={`/site/product/${product.id}?category=${category?.id}`}
+              key={product._id}
+              href={`/site/product/${product._id}?category=${category.id}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
@@ -86,7 +113,12 @@ export default async function ProductListingByCategory({ params }: { params: Pro
                 <p className="mt-2 text-sm text-gray-500">{product.shortDescription}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
-                  <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg
+                    className="ml-2 h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -94,6 +126,8 @@ export default async function ProductListingByCategory({ params }: { params: Pro
             </Link>
           ))}
         </div>
+
+        {/* Pagination */}
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -120,5 +154,5 @@ export default async function ProductListingByCategory({ params }: { params: Pro
         </Pagination>
       </div>
     </div>
-  )
+  );
 }

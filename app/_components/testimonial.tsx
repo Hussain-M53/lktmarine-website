@@ -48,7 +48,7 @@ export function Testimonial() {
           What industry leaders say about our marine solutions
         </p>
       </div>
-      <AnimatedTestimonials testimonials={testimonials} />
+      <AnimatedTestimonials testimonials={testimonials} autoplay={true} />
     </div>
   );
 }

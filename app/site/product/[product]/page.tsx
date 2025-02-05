@@ -1,17 +1,45 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Metadata } from 'next'
-import { getProduct, getProductsBySubCategory } from "@/app/data/products";
+import Image from "next/image";
+import Link from "next/link";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { sanityClient } from "@/app/lib/sanityClient";
+import imageUrlBuilder from "@sanity/image-url";
 
-export default async function ProductPage( {params} : { params: Promise<{ product: string }>}) {
-    const product = getProduct((await params).product)
-    const category = product?.categoryId;
-    const subCategory = product?.subCategoryId;
-console.log(category) 
-console.log(subCategory)
-    // Fetch related products from the same subcategory
-    const relatedProducts = getProductsBySubCategory(category  || '', subCategory || '').slice(0, 3);
+const builder = imageUrlBuilder(sanityClient);
+const urlFor = (source: any) => builder.image(source);
+
+async function getProduct(slug: string) {
+    const query = `
+    *[_type == "product" && slug.current == $slug][0] {
+      title,
+      images,
+      productCategory->{
+        _id,
+        title
+      },
+      body,
+      "shortDescription": seo.description,
+      features,
+      specifications,
+      applications
+    }
+  `;
+    return await sanityClient.fetch(query, { slug });
+}
+
+async function getProductsBySubCategory(categoryId: string) {
+    const query = `
+    *[_type == "product" && references($categoryId)] | order(_createdAt desc) {
+      _id,
+      title,
+      images,
+      slug
+    }
+  `;
+    return await sanityClient.fetch(query, { categoryId });
+}
+
+export default async function ProductPage({ params }: { params: { product: string } }) {
+    const product = await getProduct(params.product);
 
     if (!product) {
         return (
@@ -27,8 +55,11 @@ console.log(subCategory)
                     </Link>
                 </div>
             </div>
-        )
+        );
     }
+
+    const category = product?.productCategory?._id || '';
+    const relatedProducts = await getProductsBySubCategory(category);
 
     return (
         <div className="bg-gray-50">
@@ -36,11 +67,22 @@ console.log(subCategory)
                 {/* Breadcrumb */}
                 <nav className="my-8">
                     <ol className="flex items-center space-x-2 text-sm text-gray-500">
-                        <li><Link href="/site/product" className="hover:text-blue-600">All Products</Link></li>
+                        <li>
+                            <Link href="/site/product" className="hover:text-blue-600">
+                                All Products
+                            </Link>
+                        </li>
                         <li>&gt;</li>
-                        <li><Link href={`/site/product-category/${category}`} className="hover:text-blue-600 capitalize">{category?.replace('-', ' ')}</Link></li>
+                        <li>
+                            <Link
+                                href={`/site/product-category/${category}`}
+                                className="hover:text-blue-600 capitalize"
+                            >
+                                {product.productCategory.title}
+                            </Link>
+                        </li>
                         <li>&gt;</li>
-                        <li className="text-gray-900 font-medium">{product.name}</li>
+                        <li className="text-gray-900 font-medium">{product.title}</li>
                     </ol>
                 </nav>
 
@@ -49,14 +91,14 @@ console.log(subCategory)
                     <div className="lg:max-w-lg lg:self-start">
                         <Tabs defaultValue="0" className="flex flex-col-reverse">
                             <TabsList className="grid grid-cols-4 gap-4 mt-4">
-                                {product.images.map((image, idx) => (
+                                {product.images.map((image: any, idx: number) => (
                                     <TabsTrigger
-                                        key={image}
+                                        key={idx}
                                         value={idx.toString()}
                                         className="relative aspect-square overflow-hidden rounded-lg border-2 border-gray-200 hover:border-blue-500 transition-colors"
                                     >
                                         <Image
-                                            src={image}
+                                            src={urlFor(image).url()}
                                             alt=""
                                             fill
                                             className="object-cover object-center"
@@ -66,11 +108,11 @@ console.log(subCategory)
                             </TabsList>
 
                             <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100">
-                                {product.images.map((image, idx) => (
-                                    <TabsContent key={image} value={idx.toString()}>
+                                {product.images.map((image: any, idx: number) => (
+                                    <TabsContent key={idx} value={idx.toString()}>
                                         <Image
-                                            src={image}
-                                            alt={product.name}
+                                            src={urlFor(image).url()}
+                                            alt={product.title}
                                             fill
                                             className="object-cover object-center"
                                         />
@@ -84,16 +126,16 @@ console.log(subCategory)
                     <div className="mt-10 lg:mt-0 lg:col-start-2 lg:row-span-2">
                         <div className="flex flex-col space-y-8">
                             <div>
-                                <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
+                                <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.title}</h1>
                                 <p className="mt-2 text-lg font-medium text-blue-600">{product.shortDescription}</p>
-                                <p className="mt-4 text-gray-600 leading-relaxed">{product.description}</p>
+                                <p className="mt-4 text-gray-600 leading-relaxed">{product.body}</p>
                             </div>
 
                             {/* Features */}
                             <div className="border-t border-gray-200 pt-8">
                                 <h2 className="text-xl font-semibold text-gray-900">Key Features</h2>
                                 <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    {product.features.map((feature) => (
+                                    {product.features?.map((feature: string) => (
                                         <li key={feature} className="flex items-start">
                                             <svg className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -103,69 +145,31 @@ console.log(subCategory)
                                     ))}
                                 </ul>
                             </div>
-
-                            {/* Specifications */}
-                            <div className="border-t border-gray-200 pt-8">
-                                <h2 className="text-xl font-semibold text-gray-900">Technical Specifications</h2>
-                                <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                                    {Object.entries(product.specifications).map(([key, value]) => (
-                                        <div key={key} className="bg-gray-50 p-4 rounded-lg">
-                                            <dt className="text-sm font-medium text-gray-500">{key}</dt>
-                                            <dd className="mt-1 text-sm font-semibold text-gray-900">{value}</dd>
-                                        </div>
-                                    ))}
-                                </dl>
-                            </div>
-
-                            {/* Applications */}
-                            <div className="border-t border-gray-200 pt-8">
-                                <h2 className="text-xl font-semibold text-gray-900">Applications</h2>
-                                <div className="mt-4 flex flex-wrap gap-2">
-                                    {product.applications.map((application) => (
-                                        <span key={application} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-50 text-blue-700">
-                                            {application}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Contact Button */}
-                            <div className="border-t border-gray-200 pt-8">
-                                <Link
-                                    href="/site/contact"
-                                    className="flex w-full items-center justify-center rounded-lg bg-[#024caa] px-8 py-4 text-base font-medium text-white hover:bg-blue-700 transition-colors"
-                                >
-                                    Request Quotation
-                                    <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </Link>
-                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Related Products Section */}
+                {/* Related Products */}
                 <div className="mt-16">
                     <h2 className="text-2xl font-semibold text-white py-4 bg-[#024caa] text-center">Related Products</h2>
                     <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 mt-6">
-                        {relatedProducts.map((relatedProduct) => (
+                        {relatedProducts.map((relatedProduct: any) => (
                             <Link
-                                key={relatedProduct.id}
-                                href={`/site/product/${relatedProduct.id}?category=${relatedProduct.subCategoryId}`}
+                                key={relatedProduct._id}
+                                href={`/site/product/${relatedProduct.slug.current}`}
                                 className="group block rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
                             >
                                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
                                     <Image
-                                        src={relatedProduct.images[0]}
-                                        alt={relatedProduct.name}
+                                        src={urlFor(relatedProduct.images[0]).url()}
+                                        alt={relatedProduct.title}
                                         width={500}
                                         height={500}
                                         className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
                                     />
                                 </div>
                                 <div className="mt-4 p-4">
-                                    <h3 className="text-lg font-medium text-gray-900">{relatedProduct.name}</h3>
+                                    <h3 className="text-lg font-medium text-gray-900">{relatedProduct.title}</h3>
                                     <p className="mt-2 text-sm text-gray-500">{relatedProduct.shortDescription}</p>
                                     <div className="mt-4 flex items-center text-blue-600">
                                         <span className="text-sm font-medium">View Details</span>
@@ -180,5 +184,5 @@ console.log(subCategory)
                 </div>
             </div>
         </div>
-    )
+    );
 }

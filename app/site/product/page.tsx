@@ -1,7 +1,7 @@
-import Image from "next/image"
-import Link from "next/link"
-import { Metadata } from 'next'
-import { products } from "@/app/data/products"
+import Image from "next/image";
+import Link from "next/link";
+import { Metadata } from "next";
+import { sanityClient } from "@/app/lib/sanityClient"; // Import your configured Sanity client
 import {
   Pagination,
   PaginationContent,
@@ -10,19 +10,31 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
+
+// Fetch all products from Sanity
+async function fetchAllProducts() {
+  const query = `*[_type == "product"] {
+    _id,
+    name,
+    shortDescription,
+    "images": images[].asset->url
+  }`;
+
+  return await sanityClient.fetch(query);
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Products - LKT Marine',
-    description: 'Product listing'
-  }
+    title: "Products - LKT Marine",
+    description: "Product listing",
+  };
 }
 
 export default async function AllProductListing() {
-  const productsListing = products;
+  const productsListing = await fetchAllProducts();
 
-  if (!productsListing) {
+  if (!productsListing || productsListing.length === 0) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
@@ -32,32 +44,27 @@ export default async function AllProductListing() {
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="bg-white">
+      {/* Header Section */}
       <div className="relative bg-gray-900 h-[300px]">
-        {/* <Image
-          src={category.image}
-          alt={category.name}
-          fill
-          className="object-cover opacity-50"
-        /> */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">All Products</h1>
-            <p className="text-lg text-gray-200"></p>
           </div>
         </div>
       </div>
 
+      {/* Products Grid */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Object.values(productsListing)?.map((product : any) => (
+          {productsListing.map((product: any) => (
             <Link
-              key={product.id}
-              href={`/site/product/${product.id}`}
+              key={product._id}
+              href={`/site/product/${product._id}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
@@ -74,14 +81,26 @@ export default async function AllProductListing() {
                 <p className="mt-2 text-sm text-gray-500">{product.shortDescription}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
-                  <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="ml-2 h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </div>
               </div>
             </Link>
           ))}
         </div>
+
+        {/* Pagination Placeholder */}
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -108,6 +127,5 @@ export default async function AllProductListing() {
         </Pagination>
       </div>
     </div>
-  )
+  );
 }
-  

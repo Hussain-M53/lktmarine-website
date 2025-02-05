@@ -21,7 +21,6 @@ export const AnimatedTestimonials = ({
   const [active, setActive] = useState(0);
 
   const handleNext = () => {
-    console.log("Changing to next testimonial");
     setActive((prev) => (prev + 1) % testimonials.length);
   };
 
@@ -37,7 +36,7 @@ export const AnimatedTestimonials = ({
     if (autoplay) {
       const interval = setInterval(() => {
         handleNext(); 
-      }, 2000);
+      }, 5000);
   
       return () => clearInterval(interval);
     }

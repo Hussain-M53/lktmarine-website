@@ -12,7 +12,7 @@ function generateToken(email: string) {
 export async function POST(request: Request) {
   const body = await request.json();
   const { email, password } = body;
-  if (email === process.env.ADMIN_EMAIL || password === process.env.ADMIN_PASSWORD) {
+  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     try {
       const token = generateToken(email);
 

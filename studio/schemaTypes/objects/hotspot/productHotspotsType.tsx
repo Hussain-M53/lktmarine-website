@@ -1,6 +1,5 @@
 import {defineArrayMember, defineField} from 'sanity'
 
-import ProductTooltip from '../../../components/hotspots/ProductTooltip'
 
 export const productHotspotsType = defineField({
   name: 'productHotspots',
@@ -12,7 +11,6 @@ export const productHotspotsType = defineField({
   options: {
     imageHotspot: {
       imagePath: 'image',
-      tooltip: ProductTooltip,
       pathRoot: 'parent',
     },
   },

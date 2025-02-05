@@ -21,10 +21,12 @@ export const portableTextSimpleType = defineField({
           },
         ],
         annotations: [
+          
           {
-            name: 'linkProduct',
-            type: 'linkProduct',
+            name: 'linkInternal',
+            type: 'linkInternal',
           },
+         
         ],
       },
       type: 'block',

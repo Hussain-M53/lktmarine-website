@@ -9,12 +9,6 @@ export const productFeaturesType = defineField({
   icon: TagIcon,
   fields: [
     defineField({
-      name: 'products',
-      type: 'array',
-      of: [{type: 'productReference'}],
-      validation: (Rule) => Rule.required().max(2),
-    }),
-    defineField({
       name: 'layout',
       type: 'string',
       initialValue: 'card',

@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +20,7 @@ const AnimatedCounter = ({ value, duration = 2 }: { value: string, duration?: nu
         const progress = (timestamp - startTime) / (duration * 1000);
 
         if (progress < 1) {
-          setCounter(Math.min(Math.floor(finalValue * progress), finalValue));
+          setCounter(Math.floor(finalValue * progress));
           requestAnimationFrame(animateCount);
         } else {
           setCounter(finalValue);

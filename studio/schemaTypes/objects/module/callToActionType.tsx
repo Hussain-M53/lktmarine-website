@@ -45,7 +45,13 @@ export const callToActionType = defineField({
       rows: 2,
       fieldset: 'copy',
     }),
-   
+    defineField({
+      name: 'link',
+      type: 'array',
+      of: [{type: 'linkInternal'}],
+      validation: (Rule) => Rule.max(1),
+      fieldset: 'copy',
+    }),
     defineField({
       name: 'content',
       type: 'array',
@@ -55,11 +61,6 @@ export const callToActionType = defineField({
           icon: ImageIcon,
           type: 'image',
           options: {hotspot: true},
-        }),
-        defineArrayMember({
-          name: 'productWithVariant',
-          type: 'productWithVariant',
-          validation: (Rule) => Rule.required(),
         }),
       ],
     }),

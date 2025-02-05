@@ -1,25 +1,37 @@
-export const SANITY_STUDIO_TITLE = 'LKT Marine Studio'
-export const SANITY_STUDIO_PROJECT_ID = '32wddwdo'
-export const SANITY_STUDIO_DATASET = 'production'
-export const SANITY_API_VERSION = '2023-05-03'
 
-// Document type constants
-export const LOCKED_DOCUMENT_TYPES = [
-  'media.tag',
-  'product',
-  'productVariant',
-  'collection'
+// Currency code (ISO 4217) to use when displaying prices in the studio
+
+import { ColorWheelIcon, ComposeIcon, SearchIcon } from '@sanity/icons'
+
+// Document types which:
+// - cannot be created in the 'new document' menu
+// - cannot be duplicated, unpublished or deleted
+export const LOCKED_DOCUMENT_TYPES = ['settings', 'home', 'media.tag']
+
+// References to include in 'internal' links
+export const PAGE_REFERENCES = [
+  {type: 'collection'},
+  {type: 'home'},
+  {type: 'page'},
+  {type: 'product'},
 ]
 
-export const SHOPIFY_DOCUMENT_TYPES = [
-  'product',
-  'productVariant',
-  'collection'
+// Field groups used through schema types
+export const GROUPS = [
+  {
+    name: 'theme',
+    title: 'Theme',
+    icon: ColorWheelIcon,
+  },
+  {
+    default: true,
+    name: 'editorial',
+    title: 'Editorial',
+    icon: ComposeIcon
+  },
+  {
+    name: 'seo',
+    title: 'SEO',
+    icon: SearchIcon
+  },
 ]
-
-// Add any other Shopify-related constants
-export const SHOPIFY_SYNC_TYPES = {
-  PRODUCT: 'product',
-  COLLECTION: 'collection',
-  VARIANT: 'productVariant'
-} 

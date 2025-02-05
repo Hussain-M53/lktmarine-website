@@ -1,7 +1,8 @@
 "use client";
+import { Link } from "lucide-react";
 import React from "react";
 
-export function ProductCategory() {
+export function ProductCategory({ categories }: any) {
   return (
     <div className="bg-white py-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -13,21 +14,23 @@ export function ProductCategory() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {items.map((item, i) => (
-            <div 
+          {categories?.map((item: any, i: number) => (
+            <div
               key={i}
               className="group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2"
             >
-              <div 
+              <div
                 className="relative h-[400px] w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${item.image})` }}
+                style={{ backgroundImage: `url(${item?.image})` }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-40 transition-opacity group-hover:bg-opacity-30"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
-                  <p className="text-sm opacity-90 mb-4">{item.description}</p>
+                  <h3 className="text-2xl font-bold mb-2">{item?.title}</h3>
+                  <p className="text-sm opacity-90 mb-4">{item?.description}</p>
                   <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors">
-                    Learn More
+                    <Link href={`/site/product-category/${item.slug}`} >
+                      View Products
+                    </Link>
                   </button>
                 </div>
               </div>

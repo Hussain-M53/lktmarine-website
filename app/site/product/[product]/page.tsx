@@ -38,8 +38,8 @@ async function getProductsBySubCategory(categoryId: string) {
     return await sanityClient.fetch(query, { categoryId });
 }
 
-export default async function ProductPage({ params }: { params: { product: string } }) {
-    const product = await getProduct(params.product);
+export default async function ProductPage({ params }: { params: Promise<{ product: string }> }) {
+    const product = await getProduct((await params).product);
 
     if (!product) {
         return (

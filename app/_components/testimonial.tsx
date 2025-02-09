@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 export function Testimonial() {

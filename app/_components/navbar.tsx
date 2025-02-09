@@ -23,6 +23,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { sanityClient } from '@/app/lib/sanityClient'
 
 const productCategories = [
   {
@@ -51,6 +52,37 @@ export default function Navbar() {
   const [isProductsOpen, setIsProductsOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const lastScrollY = useRef(0)
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const query = `
+        *[_type == "productCategory"] {
+          name,
+          "slug": slug.current,
+          parentCategory-> {
+            name,
+            "slug": slug.current
+          }
+        }
+      `;
+      const result = await sanityClient.fetch(query);
+
+      const organizedCategories = result.reduce((acc : any, category : any) => {
+        if (!category.parentCategory) {
+          acc.push({ ...category, subcategories: [] });
+        } else {
+          const parent = acc.find((cat : any) => cat.slug === category.parentCategory.slug);
+          if (parent) parent.subcategories.push(category);
+        }
+        return acc;
+      }, []);
+
+      setCategories(organizedCategories);
+    }
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -164,24 +196,24 @@ export default function Navbar() {
                 }}
                 className="absolute -left-48 top-full z-10 mt-3 w-screen max-w-4xl overflow-hidden rounded-xl bg-white/95 backdrop-blur-sm shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {productCategories.map((item) => (
-                    <div key={item.name} className='flex flex-col '>
+                  {categories?.map((item : any) => (
+                    <div key={item?.slug} className='flex flex-col '>
                       <div className="group relative flex items-center gap-x-2 rounded-lg p-2 hover:bg-gray-50 transition-colors">
                         <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white transition-colors">
                           <item.icon aria-hidden="true" className="h-8 w-8 text-gray-600 group-hover:text-[#024caa]" />
                         </div>
                         <div onClick={() => setIsProductsOpen(false)}>
-                          <Link href={item.href} className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors">
+                          <Link href={`/site/product-category/${item?.slug}`} className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors">
                             {item.name}
                             <span className="absolute inset-0" />
                           </Link>
                         </div>
                       </div>
                       <div className="pl-14 space-y-2" >
-                        {item.subcategories.map((subcategory, index) => (
+                        {item?.subcategories?.map((subcategory : any, index : number) => (
                           <Link
-                            key={index}
-                            href={`${item.href}/${subcategory}`}
+                            key={subcategory?.slug}
+                            href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
                             onClick={() => setIsProductsOpen(false)}
                             className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                           >
@@ -267,20 +299,20 @@ export default function Navbar() {
                   </Link>
                   <DisclosurePanel className="pl-6">
                     <div className="space-y-2">
-                      {productCategories.map((item) => (
-                        <div key={item.name} className="flex flex-col">
+                      {productCategories.map((item : any) => (
+                        <div key={item.slug} className="flex flex-col">
                           <Link
-                            href={item.href}
+                             href={`/site/product-category/${item?.slug}`}
                             onClick={() => setMobileMenuOpen(false)}
                             className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors"
                           >
                             {item.name}
                           </Link>
                           <div className="pl-4 space-y-1">
-                            {item.subcategories.map((subcategory, index) => (
+                            {item.subcategories.map((subcategory : any, index:number) => (
                               <Link
-                                key={index}
-                                href={`${item.href}/${subcategory}`}
+                              key={subcategory?.slug}
+                              href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                               >

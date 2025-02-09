@@ -51,16 +51,15 @@ async function fetchProductsBySubCategory(subCategoryId: string) {
   return await sanityClient.fetch(query, { subCategoryId });
 }
 
-export async function generateMetadata({ params }: { params: { category: string; subCategory: string } }): Promise<Metadata> {
-  const { category, subCategory } = params;
+export async function generateMetadata({ params }: { params: Promise<{ category: string, subCategory: string }> }): Promise<Metadata> {
   return {
-    title: `${category || "Products"} - LKT Marine`,
-    description: subCategory || "Product listing",
+    title: `${(await params).category || 'Products'} - LKT Marine`,
+    description: (await params).subCategory || 'Product listing',
   };
 }
 
-export default async function ProductListingBySubCategory({ params }: { params: { category: string; subCategory: string } }) {
-  const { category: categorySlug, subCategory: subCategorySlug } = params;
+export default async function ProductListingBySubCategory({ params }: { params: Promise<{ category: string, subCategory: string }> }) {
+  const { category: categorySlug, subCategory: subCategorySlug } = await params;
 
   const { category, subCategory } = await fetchCategoryAndSubCategory(categorySlug, subCategorySlug);
 

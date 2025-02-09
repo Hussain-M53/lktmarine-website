@@ -1,8 +1,20 @@
 "use client";
-import { Link } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
-export function ProductCategory({ categories }: any) {
+type Props = {
+  categories: Array<{
+    title: string;
+    description: string;
+    image: string;
+    slug: {
+      _type: string;
+      current: string;
+    }
+  }>;
+};
+
+export function ProductCategory({ categories }: Props) {
   return (
     <div className="bg-white py-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -14,7 +26,7 @@ export function ProductCategory({ categories }: any) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {categories?.map((item: any, i: number) => (
+          {categories?.map((item, i) => (
             <div
               key={i}
               className="group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2"
@@ -27,11 +39,9 @@ export function ProductCategory({ categories }: any) {
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="text-2xl font-bold mb-2">{item?.title}</h3>
                   <p className="text-sm opacity-90 mb-4">{item?.description}</p>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors">
-                    <Link href={`/site/product-category/${item.slug}`} >
+                  <Link href={`/site/product-category/${item.slug.current}`}className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition-colors">
                       View Products
-                    </Link>
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -59,3 +69,4 @@ const items = [
     image: "https://shahamanatcraftint.com/wp-content/uploads/engine.jpg",
   },
 ];
+

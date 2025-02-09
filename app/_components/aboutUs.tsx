@@ -43,7 +43,7 @@ function AboutUs() {
     <div className="overflow-hidden">
       {/* Hero Section with Gradient */}
       <section className="relative min-h-[90vh] bg-gradient-to-r from-[#091057] via-[#1a237e] to-[#024caa]">
-        <div className="absolute inset-0 bg-[url('/images/pattern.png')] opacity-10"></div>
+        <div className="absolute inset-0 opacity-10"></div>
         <div className="container mx-auto px-4 relative">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}

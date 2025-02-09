@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
-import { sanityClient } from "@/app/lib/sanityClient"; // Replace with your API client
+import { sanityClient } from "@/app/lib/sanityClient"; // Replace with your Sanity client
 import {
   Pagination,
   PaginationContent,
@@ -13,41 +13,45 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-// Fetch categories (static or from backend)
-const categories = [
-  {
-    id: "marine",
-    name: "Marine Solutions",
-    description: "Complete range of marine equipment and spare parts.",
-    image: "https://example.com/marine.jpg",
-  },
-  // Add other categories here
-];
-
-// Metadata for SEO
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
-  const category = categories.find((c) => c.id === params.category);
-  return {
-    title: `${category?.name || "Category"} - LKT Marine`,
-    description: category?.description || "Product category listing",
-  };
+async function fetchCategoryDetails(slug: string) {
+  const query = `*[_type == "productCategory" && slug.current == $slug][0] {
+    _id,
+    title,
+    description,
+    "image": image.asset->url,
+    seo
+  }`;
+  return await sanityClient.fetch(query, { slug });
 }
 
-// Fetch products by category
 async function fetchProductsByCategory(categoryId: string) {
-  const query = `*[_type == "product" && references(*[_type=="productCategory" && id=="${categoryId}"]._id)] {
+  const query = `*[_type == "product" && references($categoryId)] {
     _id,
     name,
     shortDescription,
     "images": images[].asset->url
   }`;
-
-  const products = await sanityClient.fetch(query); // Replace with your API client
-  return products;
+  return await sanityClient.fetch(query, { categoryId });
 }
 
-export default async function ProductListingByCategory({ params }: { params: { category: string } }) {
-  const category = categories.find((c) => c.id === params.category);
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const slug = (await params).category;
+  const category = await fetchCategoryDetails(slug);
+
+  return {
+    title: category?.seo?.title || `${category?.title || "Category"} - LKT Marine`,
+    description: category?.seo?.description || category?.description || "Product category listing",
+    openGraph: {
+      title: category?.seo?.title || category?.title,
+      description: category?.seo?.description || category?.description,
+      images: category?.seo?.image ? [{ url: category.seo.image.asset._ref }] : undefined,
+    },
+  };
+}
+
+export default async function ProductListingByCategory({ params }: { params: Promise<{ category: string }> }) {
+  const slug = (await params).category; 
+  const category = await fetchCategoryDetails(slug);
 
   if (!category) {
     return (
@@ -62,22 +66,20 @@ export default async function ProductListingByCategory({ params }: { params: { c
     );
   }
 
-  const products = await fetchProductsByCategory(params.category);
+  const products = await fetchProductsByCategory(category._id);
 
   return (
     <div className="bg-white">
-      {/* Header with Category Details */}
       <div className="relative bg-gray-900 h-[300px]">
-        <Image src={category.image} alt={category.name} fill className="object-cover opacity-50" />
+        <Image src={category.image} alt={category.title} fill className="object-cover opacity-50" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">{category.name}</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">{category.title}</h1>
             <p className="text-lg text-gray-200">{category.description}</p>
           </div>
         </div>
       </div>
 
-      {/* Product Listing */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <nav className="my-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
@@ -87,16 +89,15 @@ export default async function ProductListingByCategory({ params }: { params: { c
               </Link>
             </li>
             <li>&gt;</li>
-            <li className="hover:text-blue-600 capitalize">{category.name?.replace("-", " ")}</li>
+            <li className="hover:text-blue-600 capitalize">{category.title}</li>
           </ol>
         </nav>
 
-        {/* Products Grid */}
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.map((product: any) => (
             <Link
               key={product._id}
-              href={`/site/product/${product._id}?category=${category.id}`}
+              href={`/site/product/${product._id}?category=${slug}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">

@@ -1,5 +1,3 @@
-'use client'
-
 import CTA from "../_components/cta";
 import { Hero } from "../_components/hero";
 import { Testimonial } from "../_components/testimonial";
@@ -11,14 +9,13 @@ import AboutUs from "../_components/aboutUs";
 import { sanityClient } from "@/app/lib/sanityClient"; 
 
 async function fetchCategories() {
-  const query = `
-    *[_type == "productCategory" && !defined(parentCategory)] {
-      _id,
-      title,
-      slug,
-      image
-    }
-  `;
+  const query = `*[_type == "productCategory" && !defined(parentCategory)] {
+    title,
+    slug,
+    description,
+    "image": image.asset->url
+  }`;
+
   const categories = await sanityClient.fetch(query);
   return categories;
 }

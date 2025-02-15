@@ -26,6 +26,13 @@ export const productType = defineType({
       validation: validateSlug,
     }),
     defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'string',
+      group: 'editorial',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "images",
       title: "Images",
       type: "array",

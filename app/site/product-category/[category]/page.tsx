@@ -27,8 +27,9 @@ async function fetchCategoryDetails(slug: string) {
 async function fetchProductsByCategory(categoryId: string) {
   const query = `*[_type == "product" && references($categoryId)] {
     _id,
-    name,
-    shortDescription,
+    title,
+    description,
+    body,
     "images": images[].asset->url
   }`;
   return await sanityClient.fetch(query, { categoryId });
@@ -103,15 +104,15 @@ export default async function ProductListingByCategory({ params }: { params: Pro
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
                 <Image
                   src={product.images[0]}
-                  alt={product.name}
+                  alt={product.title}
                   width={500}
                   height={500}
                   className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
-                <p className="mt-2 text-sm text-gray-500">{product.shortDescription}</p>
+                <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
+                <p className="mt-2 text-sm text-gray-500">{product.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg
@@ -128,7 +129,6 @@ export default async function ProductListingByCategory({ params }: { params: Pro
           ))}
         </div>
 
-        {/* Pagination */}
         <Pagination>
           <PaginationContent>
             <PaginationItem>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
-import { sanityClient } from "@/app/lib/sanityClient"; // Import your configured Sanity client
+import { sanityClient } from "@/app/lib/sanityClient"; 
 import {
   Pagination,
   PaginationContent,
@@ -12,7 +12,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-// Fetch all products from Sanity
 async function fetchAllProducts() {
   const query = `*[_type == "product"] {
     _id,

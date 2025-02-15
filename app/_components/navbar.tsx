@@ -24,6 +24,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { sanityClient } from '@/app/lib/sanityClient'
+import debounce from 'lodash/debounce';
 
 const productCategories = [
   {
@@ -44,6 +45,7 @@ const productCategories = [
 ]
 
 
+
 export default function Navbar() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -54,20 +56,23 @@ export default function Navbar() {
   const lastScrollY = useRef(0)
   const [categories, setCategories] = useState([]);
 
+  const icon = [WrenchScrewdriverIcon, BoltIcon, WrenchIcon ]
+
+
   useEffect(() => {
     async function fetchCategories() {
       const query = `
         *[_type == "productCategory"] {
-          name,
+          title,
           "slug": slug.current,
           parentCategory-> {
-            name,
+            title,
             "slug": slug.current
           }
         }
       `;
       const result = await sanityClient.fetch(query);
-
+      console.log(result);
       const organizedCategories = result.reduce((acc : any, category : any) => {
         if (!category.parentCategory) {
           acc.push({ ...category, subcategories: [] });
@@ -77,7 +82,7 @@ export default function Navbar() {
         }
         return acc;
       }, []);
-
+      console.log(organizedCategories);
       setCategories(organizedCategories);
     }
 
@@ -85,7 +90,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = debounce(() => {
       const currentScrollY = window.scrollY;
       const isStationary = currentScrollY === lastScrollY.current;
 
@@ -97,7 +102,7 @@ export default function Navbar() {
       }
       setIsScrolled(currentScrollY > 0);
       lastScrollY.current = currentScrollY;
-    };
+    }, 200);
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -196,15 +201,15 @@ export default function Navbar() {
                 }}
                 className="absolute -left-48 top-full z-10 mt-3 w-screen max-w-4xl overflow-hidden rounded-xl bg-white/95 backdrop-blur-sm shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {categories?.map((item : any) => (
-                    <div key={item?.slug} className='flex flex-col '>
+                  {categories?.map((item : any, index : number) => (
+                    <div key={index} className='flex flex-col '>
                       <div className="group relative flex items-center gap-x-2 rounded-lg p-2 hover:bg-gray-50 transition-colors">
                         <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white transition-colors">
-                          <item.icon aria-hidden="true" className="h-8 w-8 text-gray-600 group-hover:text-[#024caa]" />
+                          <WrenchScrewdriverIcon aria-hidden="true" className="h-8 w-8 text-gray-600 group-hover:text-[#024caa]" />
                         </div>
                         <div onClick={() => setIsProductsOpen(false)}>
                           <Link href={`/site/product-category/${item?.slug}`} className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors">
-                            {item.name}
+                            {item?.title}
                             <span className="absolute inset-0" />
                           </Link>
                         </div>
@@ -212,12 +217,12 @@ export default function Navbar() {
                       <div className="pl-14 space-y-2" >
                         {item?.subcategories?.map((subcategory : any, index : number) => (
                           <Link
-                            key={subcategory?.slug}
+                            key={index}
                             href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
                             onClick={() => setIsProductsOpen(false)}
                             className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                           >
-                            {subcategory}
+                            {subcategory.title}
                           </Link>
                         ))}
                       </div>
@@ -299,24 +304,24 @@ export default function Navbar() {
                   </Link>
                   <DisclosurePanel className="pl-6">
                     <div className="space-y-2">
-                      {productCategories.map((item : any) => (
-                        <div key={item.slug} className="flex flex-col">
+                      {categories?.map((item : any, index: number) => (
+                        <div key={index} className="flex flex-col">
                           <Link
                              href={`/site/product-category/${item?.slug}`}
                             onClick={() => setMobileMenuOpen(false)}
                             className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors"
                           >
-                            {item.name}
+                            {item.title}
                           </Link>
                           <div className="pl-4 space-y-1">
                             {item.subcategories.map((subcategory : any, index:number) => (
                               <Link
-                              key={subcategory?.slug}
+                              key={index}
                               href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                               >
-                                {subcategory}
+                                {subcategory.title}
                               </Link>
                             ))}
                           </div>

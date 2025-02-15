@@ -1,8 +1,8 @@
-import Image from "next/image"
-import Link from "next/link"
-import { categories } from "@/app/data/categories"
-import { Metadata } from 'next'
-import { getProductsByCategory } from "@/app/data/products"
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Metadata } from "next";
+import { sanityClient } from "@/app/lib/sanityClient"; // Replace with your Sanity client
 import {
   Pagination,
   PaginationContent,
@@ -11,19 +11,49 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
+
+async function fetchCategoryDetails(slug: string) {
+  const query = `*[_type == "productCategory" && slug.current == $slug][0] {
+    _id,
+    title,
+    description,
+    "image": image.asset->url,
+    seo
+  }`;
+  return await sanityClient.fetch(query, { slug });
+}
+
+async function fetchProductsByCategory(categoryId: string) {
+  const query = `*[_type == "product" && references($categoryId)] {
+    _id,
+    title,
+    description,
+    body,
+    "images": images[].asset->url
+  }`;
+  return await sanityClient.fetch(query, { categoryId });
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
-  const category = categories[(await params).category as keyof typeof categories]
+  const slug = (await params).category;
+  const category = await fetchCategoryDetails(slug);
+
   return {
-    title: `${category?.name || 'Category'} - LKT Marine`,
-    description: category?.description || 'Product category listing'
-  }
+    title: category?.seo?.title || `${category?.title || "Category"} - LKT Marine`,
+    description: category?.seo?.description || category?.description || "Product category listing",
+    openGraph: {
+      title: category?.seo?.title || category?.title,
+      description: category?.seo?.description || category?.description,
+      images: category?.seo?.image ? [{ url: category.seo.image.asset._ref }] : undefined,
+    },
+  };
 }
 
 export default async function ProductListingByCategory({ params }: { params: Promise<{ category: string }> }) {
-  const category = categories[(await params).category as keyof typeof categories]
-  console.log(category);
+  const slug = (await params).category; 
+  const category = await fetchCategoryDetails(slug);
+
   if (!category) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -34,23 +64,18 @@ export default async function ProductListingByCategory({ params }: { params: Pro
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
-  const products = getProductsByCategory((await params).category)
+  const products = await fetchProductsByCategory(category._id);
 
   return (
     <div className="bg-white">
       <div className="relative bg-gray-900 h-[300px]">
-        <Image
-          src={category.image}
-          alt={category.name}
-          fill
-          className="object-cover opacity-50"
-        />
+        <Image src={category.image} alt={category.title} fill className="object-cover opacity-50" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-4">{category.name}</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">{category.title}</h1>
             <p className="text-lg text-gray-200">{category.description}</p>
           </div>
         </div>
@@ -59,34 +84,43 @@ export default async function ProductListingByCategory({ params }: { params: Pro
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <nav className="my-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
-            <li><Link href="/site/product" className="hover:text-blue-600">All Products</Link></li>
+            <li>
+              <Link href="/site/product" className="hover:text-blue-600">
+                All Products
+              </Link>
+            </li>
             <li>&gt;</li>
-            <li className="hover:text-blue-600 capitalize">{category.name?.replace('-', ' ')}</li>
+            <li className="hover:text-blue-600 capitalize">{category.title}</li>
           </ol>
         </nav>
-        {/* Products Grid */}
+
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {products.map((product: any) => (
             <Link
-              key={product.id}
-              href={`/site/product/${product.id}?category=${category?.id}`}
+              key={product._id}
+              href={`/site/product/${product._id}?category=${slug}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
                 <Image
                   src={product.images[0]}
-                  alt={product.name}
+                  alt={product.title}
                   width={500}
                   height={500}
                   className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
-                <p className="mt-2 text-sm text-gray-500">{product.shortDescription}</p>
+                <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
+                <p className="mt-2 text-sm text-gray-500">{product.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
-                  <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg
+                    className="ml-2 h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -94,6 +128,7 @@ export default async function ProductListingByCategory({ params }: { params: Pro
             </Link>
           ))}
         </div>
+
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -120,5 +155,5 @@ export default async function ProductListingByCategory({ params }: { params: Pro
         </Pagination>
       </div>
     </div>
-  )
+  );
 }

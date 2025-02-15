@@ -15,16 +15,12 @@ export const heroType = defineField({
       type: 'text',
       rows: 3,
     }),
-   
+    
     defineField({
       name: 'content',
       type: 'array',
       validation: (Rule) => Rule.max(1),
       of: [
-        defineArrayMember({
-          name: 'productWithVariant',
-          type: 'productWithVariant',
-        }),
         defineArrayMember({
           name: 'imageWithProductHotspots',
           type: 'imageWithProductHotspots',

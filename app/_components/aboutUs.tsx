@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +20,7 @@ const AnimatedCounter = ({ value, duration = 2 }: { value: string, duration?: nu
         const progress = (timestamp - startTime) / (duration * 1000);
 
         if (progress < 1) {
-          setCounter(Math.min(Math.floor(finalValue * progress), finalValue));
+          setCounter(Math.floor(finalValue * progress));
           requestAnimationFrame(animateCount);
         } else {
           setCounter(finalValue);
@@ -42,7 +43,7 @@ function AboutUs() {
     <div className="overflow-hidden">
       {/* Hero Section with Gradient */}
       <section className="relative min-h-[90vh] bg-gradient-to-r from-[#091057] via-[#1a237e] to-[#024caa]">
-        <div className="absolute inset-0 bg-[url('/images/pattern.png')] opacity-10"></div>
+        <div className="absolute inset-0 opacity-10"></div>
         <div className="container mx-auto px-4 relative">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}

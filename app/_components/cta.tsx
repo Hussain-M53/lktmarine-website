@@ -1,5 +1,5 @@
-"use client";
 
+"use client";
 import { motion } from "framer-motion";
 import React from "react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
@@ -16,7 +16,7 @@ export default function CTA() {
           duration: 0.8,
           ease: "easeInOut",
         }}
-        className="relative flex flex-col items-center justify-center px-4 py-24"
+        className="relative flex flex-col items-center justify-center py-24 px-4"
       >
         <div className="text-4xl md:text-6xl font-bold text-white text-center max-w-4xl">
           Your Trusted Partner in Marine & Industrial Solutions

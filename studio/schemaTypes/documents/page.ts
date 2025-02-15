@@ -2,14 +2,14 @@ import {DocumentIcon} from '@sanity/icons'
 import {defineField} from 'sanity'
 
 import {validateSlug} from '../../utils/validateSlug'
-// import { GROUPS } from '../../constants'
+import { GROUPS } from '../../constants'
 
 export const pageType = defineField({
   name: 'page',
   title: 'Page',
   type: 'document',
   icon: DocumentIcon,
-  // groups: GROUPS,
+  groups: GROUPS,
   fields: [
     defineField({
       name: 'title',
@@ -25,12 +25,6 @@ export const pageType = defineField({
       validation: validateSlug,
     }),
     defineField({
-      name: 'colorTheme',
-      type: 'reference',
-      to: [{type: 'colorTheme'}],
-      group: 'theme',
-    }),
-    defineField({
       name: 'showHero',
       type: 'boolean',
       description: 'If disabled, page title will be displayed instead',
@@ -43,7 +37,17 @@ export const pageType = defineField({
       hidden: ({document}) => !document?.showHero,
       group: 'editorial',
     }),
-   
+    defineField({
+      name: 'body',
+      type: 'portableText',
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      group: 'seo',
+    }),
   ],
   preview: {
     select: {

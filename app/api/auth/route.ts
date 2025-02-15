@@ -12,7 +12,7 @@ function generateToken(email: string) {
 export async function POST(request: Request) {
   const body = await request.json();
   const { email, password } = body;
-  if (email === process.env.ADMIN_EMAIL || password === process.env.ADMIN_PASSWORD) {
+  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
     try {
       const token = generateToken(email);
 
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       response.cookies.set('auth_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        // maxAge: 60 * 60, 
+        maxAge: 60 * 60, 
         path: '/',
       });
 

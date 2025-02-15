@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 export function Testimonial() {
@@ -48,7 +50,7 @@ export function Testimonial() {
           What industry leaders say about our marine solutions
         </p>
       </div>
-      <AnimatedTestimonials testimonials={testimonials} />
+      <AnimatedTestimonials testimonials={testimonials} autoplay={true} />
     </div>
   );
 }

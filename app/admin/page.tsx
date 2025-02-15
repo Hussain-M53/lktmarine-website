@@ -29,6 +29,7 @@ export default function AdminLogin() {
  
       if (res.ok) {
         router.push("/studio");
+        alert(data?.message);
       } else {
         setError(data.error || 'Invalid email or password.');
       }

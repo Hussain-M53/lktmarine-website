@@ -14,6 +14,18 @@ export const colorThemeType = defineType({
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: 'text',
+      type: 'color',
+      options: {disableAlpha: true},
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'background',
+      type: 'color',
+      options: {disableAlpha: true},
+      validation: (Rule) => Rule.required(),
+    }),
   ],
   preview: {
     select: {

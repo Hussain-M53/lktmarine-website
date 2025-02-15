@@ -9,6 +9,11 @@ export const imageCallToActionType = defineField({
       name: 'title',
       type: 'string',
     }),
-  
+    defineField({
+      name: 'link',
+      type: 'array',
+      of: [{type: 'linkInternal'}],
+      validation: (Rule) => Rule.max(1),
+    }),
   ],
 })

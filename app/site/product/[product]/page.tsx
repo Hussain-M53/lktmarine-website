@@ -17,7 +17,7 @@ async function getProduct(slug: string) {
         title
       },
       body,
-      "shortDescription": seo.description,
+      description,
       features,
       specifications,
       applications
@@ -43,7 +43,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
 
     if (!product) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-white">
+            <div className="min-h-screen flex items-center justify-center bg-gray-300">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-900">Product Not Found</h1>
                     <p className="mt-2 text-gray-600">The product you're looking for doesn't exist.</p>

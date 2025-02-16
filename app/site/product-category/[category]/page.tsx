@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
-import { sanityClient } from "@/app/lib/sanityClient"; // Replace with your Sanity client
+import { sanityClient } from "@/app/lib/sanityClient";
 import {
   Pagination,
   PaginationContent,
@@ -12,6 +12,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+
+const PRODUCTS_PER_PAGE = 9;
 
 async function fetchCategoryDetails(slug: string) {
   const query = `*[_type == "productCategory" && slug.current == $slug][0] {
@@ -25,13 +27,15 @@ async function fetchCategoryDetails(slug: string) {
 }
 
 async function fetchProductsByCategory(categoryId: string) {
-  const query = `*[_type == "product" && references($categoryId)] {
+  const query = `*[_type == "product" && (productCategory._ref in *[_type == "productCategory" && parentCategory._ref == $categoryId]._id)] {
     _id,
     title,
+    slug,
     description,
     body,
     "images": images[].asset->url
   }`;
+
   return await sanityClient.fetch(query, { categoryId });
 }
 
@@ -51,12 +55,15 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 }
 
 export default async function ProductListingByCategory({ params }: { params: Promise<{ category: string }> }) {
-  const slug = (await params).category; 
+  const slug = (await params).category;
   const category = await fetchCategoryDetails(slug);
+
+  const products = await fetchProductsByCategory(category._id);
+  console.log(products);
 
   if (!category) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-gray-300">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Category Not Found</h1>
           <Link href="/site" className="text-blue-600 hover:text-blue-800">
@@ -67,7 +74,29 @@ export default async function ProductListingByCategory({ params }: { params: Pro
     );
   }
 
-  const products = await fetchProductsByCategory(category._id);
+  if (products?.length <= 0) {
+    return (
+      <div>
+        <div className="relative bg-gray-900 h-[300px]">
+          <Image src={category.image} alt={category.title} fill className="object-cover opacity-50" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-white mb-4">{category.title}</h1>
+              <p className="text-lg text-gray-200">{category.description}</p>
+            </div>
+          </div>
+        </div>
+        <div className="min-h-[calc(100vh-300px)] flex items-center justify-center bg-white">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">Products Not Found</h1>
+            <Link href="/site" className="text-blue-600 hover:text-blue-800">
+              Return to Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  };
 
   return (
     <div className="bg-white">
@@ -112,7 +141,7 @@ export default async function ProductListingByCategory({ params }: { params: Pro
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
                 <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{product.description}</p>
+                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg

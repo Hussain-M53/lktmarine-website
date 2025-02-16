@@ -15,8 +15,9 @@ import {
 async function fetchAllProducts() {
   const query = `*[_type == "product"] {
     _id,
-    name,
-    shortDescription,
+    title,
+    descrition,
+    body,
     "images": images[].asset->url
   }`;
 
@@ -35,7 +36,7 @@ export default async function AllProductListing() {
 
   if (!productsListing || productsListing.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-gray-400 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Products Not Found</h1>
           <Link href="/site" className="text-blue-600 hover:text-blue-800">
@@ -63,21 +64,21 @@ export default async function AllProductListing() {
           {productsListing.map((product: any) => (
             <Link
               key={product._id}
-              href={`/site/product/${product._id}`}
+              href={`/site/product/${product.slug}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
                 <Image
                   src={product.images[0]}
-                  alt={product.name}
+                  alt={product.title}
                   width={500}
                   height={500}
                   className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
-                <p className="mt-2 text-sm text-gray-500">{product.shortDescription}</p>
+                <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
+                <p className="mt-2 text-sm text-gray-500">{product.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg

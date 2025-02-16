@@ -102,7 +102,7 @@ export default function Navbar() {
       }
       setIsScrolled(currentScrollY > 0);
       lastScrollY.current = currentScrollY;
-    }, 200);
+    }, 100);
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -269,7 +269,7 @@ export default function Navbar() {
             <Link href="/site" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <Image
-                alt=""
+                alt="logo"
                 src="/logo.svg"
                 className="h-8 w-auto"
                 width={8}

@@ -36,6 +36,7 @@ export const productType = defineType({
       name: "images",
       title: "Images",
       type: "array",
+      group: "editorial",
       of: [{ type: "image" }]
     }),
 
@@ -46,6 +47,27 @@ export const productType = defineType({
       to: [{ type: 'productCategory' }],
       group: 'editorial',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'features',
+      title: 'Features',
+      type: 'array',
+      of: [{ type: 'string' }],
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'specifications',
+      title: 'Specifications',
+      type: 'array',
+      of: [{ type: 'string' }],
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'applications',
+      title: 'Applications',
+      type: 'array',
+      of: [{ type: 'string' }],
+      group: 'editorial',
     }),
     defineField({
       name: 'body',

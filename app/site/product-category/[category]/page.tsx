@@ -13,7 +13,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const PRODUCTS_PER_PAGE = 9;
+const PRODUCTS_PER_PAGE = 2;
 
 async function fetchCategoryDetails(slug: string) {
   const query = `*[_type == "productCategory" && slug.current == $slug][0] {
@@ -26,7 +26,8 @@ async function fetchCategoryDetails(slug: string) {
   return await sanityClient.fetch(query, { slug });
 }
 
-async function fetchProductsByCategory(categoryId: string) {
+async function fetchProductsByCategory(categoryId: string, page = 1) {
+  const start = (page - 1) * PRODUCTS_PER_PAGE;
   const query = `*[_type == "product" && (productCategory._ref in *[_type == "productCategory" && parentCategory._ref == $categoryId]._id)] {
     _id,
     title,
@@ -36,7 +37,7 @@ async function fetchProductsByCategory(categoryId: string) {
     "images": images[].asset->url
   }`;
 
-  return await sanityClient.fetch(query, { categoryId });
+  return await sanityClient.fetch(query, { categoryId, start, end: start + PRODUCTS_PER_PAGE });
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
@@ -54,12 +55,14 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   };
 }
 
-export default async function ProductListingByCategory({ params }: { params: Promise<{ category: string }> }) {
+export default async function ProductListingByCategory({ params, searchParams }: { params: Promise<{ category: string }>, searchParams: Promise<{ page: string }> }) {
   const slug = (await params).category;
   const category = await fetchCategoryDetails(slug);
 
-  const products = await fetchProductsByCategory(category._id);
-  console.log(products);
+  const page = parseInt((await searchParams)?.page) || 1;
+  const { products, total } = await fetchProductsByCategory(category._id);
+  const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
+
 
   if (!category) {
     return (
@@ -74,7 +77,7 @@ export default async function ProductListingByCategory({ params }: { params: Pro
     );
   }
 
-  if (products?.length <= 0) {
+  if (!products) {
     return (
       <div>
         <div className="relative bg-gray-900 h-[300px]">
@@ -124,7 +127,7 @@ export default async function ProductListingByCategory({ params }: { params: Pro
         </nav>
 
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product: any) => (
+          {products?.map((product: any) => (
             <Link
               key={product._id}
               href={`/site/product/${product._id}?category=${slug}`}
@@ -136,7 +139,7 @@ export default async function ProductListingByCategory({ params }: { params: Pro
                   alt={product.title}
                   width={500}
                   height={500}
-                  className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
+                  className="w-96 h-96 object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
@@ -157,32 +160,44 @@ export default async function ProductListingByCategory({ params }: { params: Pro
             </Link>
           ))}
         </div>
-
         <Pagination>
           <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
+            {page > 1 && <PaginationItem><PaginationPrevious href={`?page=${page - 1}`} /></PaginationItem>}
+            {[...Array(totalPages)].map((_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink href={`?page=${i + 1}`} isActive={i + 1 === page}>{i + 1}</PaginationLink>
+              </PaginationItem>
+            ))}
+            {page < totalPages && <PaginationItem><PaginationNext href={`?page=${page + 1}`} /></PaginationItem>}
           </PaginationContent>
         </Pagination>
       </div>
     </div>
   );
 }
+
+
+<Pagination>
+  <PaginationContent>
+    <PaginationItem>
+      <PaginationPrevious href="#" />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">1</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#" isActive>
+        2
+      </PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationLink href="#">3</PaginationLink>
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationEllipsis />
+    </PaginationItem>
+    <PaginationItem>
+      <PaginationNext href="#" />
+    </PaginationItem>
+  </PaginationContent>
+</Pagination>

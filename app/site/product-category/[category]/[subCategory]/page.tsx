@@ -109,7 +109,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
           src={subCategory?.image}
           alt={subCategory?.title}
           fill
-          className="object-cover opacity-50"
+          className="opacity-50 object-cover"
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
@@ -142,7 +142,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
           {products.map((product: any) => (
             <Link
               key={product._id}
-              href={`/site/product/${product?.slug}?category=${subCategory?.slug}`}
+              href={`/site/product/${product.slug}?category=${subCategory?.slug}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
@@ -151,7 +151,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
                   alt={product.title}
                   width={500}
                   height={500}
-                  className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
+                  className="w-96 object-contain object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">

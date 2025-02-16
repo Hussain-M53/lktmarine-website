@@ -1,6 +1,62 @@
+"use client";
+
 import Image from 'next/image'
+import { useState } from 'react';
 
 export default function Quotation() {
+    const [formData, setFormData] = useState({
+        fullName: "",
+        company: "",
+        email: "",
+        phone: "",
+        message: "",
+    });
+
+    const [errors, setErrors] = useState({}) as any;
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+
+    const validateForm = () => {
+        const newErrors: Record<string, string> = {};
+
+        if (!formData.fullName) newErrors.fullName = "Full Name is required";
+        if (!formData.company) newErrors.company = "Company Name is required";
+        if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Valid email is required";
+        if (!formData.phone || !/^\d{10,15}$/.test(formData.phone)) newErrors.phone = "Valid phone number is required";
+        if (!formData.message) newErrors.message = "Message is required";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        if (!validateForm()) return;
+
+        setLoading(true);
+        setSuccess(false);
+
+        try {
+            const res = await fetch("/api/send-quotation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                setSuccess(true);
+                setFormData({ fullName: "", company: "", email: "", phone: "", message: "" });
+            } else {
+                alert("Failed to send quote request. Try again later.");
+            }
+        } catch (error) {
+            console.error("Error sending form", error);
+            alert("Error sending request");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="relative min-h-screen bg-white">
             <div className="lg:grid lg:grid-cols-2 lg:min-h-screen">
@@ -64,7 +120,9 @@ export default function Quotation() {
                 {/* Right Column - Form */}
                 <div className="relative bg-[#024caa] px-6 lg:px-8 flex items-center">
                     <div className="mx-auto max-w-xl w-full py-16 lg:py-0">
-                        <form action="#" method="POST" className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            {success && <p className="text-green-500">Your request has been sent successfully!</p>}
+
                             <div className="grid grid-cols-2 gap-5">
                                 {/* Full Name */}
                                 <div>
@@ -77,9 +135,12 @@ export default function Quotation() {
                                             name="full-name"
                                             id="full-name"
                                             autoComplete="name"
+                                            value={formData.fullName}
+                                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                                             className="block w-full rounded-lg border-0 bg-white/5 px-3.5 py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                             placeholder="John Doe"
                                         />
+                                        {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
                                     </div>
                                 </div>
 
@@ -93,9 +154,12 @@ export default function Quotation() {
                                             type="text"
                                             name="company"
                                             id="company"
+                                            value={formData.company}
+                                            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                                             className="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                             placeholder="Your Company Ltd."
                                         />
+                                        {errors.company && <p className="text-red-500 text-sm">{errors.company}</p>}
                                     </div>
                                 </div>
                             </div>
@@ -111,9 +175,12 @@ export default function Quotation() {
                                             name="email"
                                             id="email"
                                             autoComplete="email"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             className="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                             placeholder="you@example.com"
                                         />
+                                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                                     </div>
                                 </div>
 
@@ -128,9 +195,12 @@ export default function Quotation() {
                                             name="phone"
                                             id="phone"
                                             autoComplete="tel"
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             className="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                             placeholder="+1 (555) 000-0000"
                                         />
+                                        {errors?.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
                                     </div>
                                 </div>
 
@@ -144,20 +214,23 @@ export default function Quotation() {
                                             name="message"
                                             id="message"
                                             rows={4}
+                                            value={formData.message}
+                                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                             className="block w-full rounded-md border-0 bg-white/5 px-3.5 py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6"
                                             placeholder="Tell us about your requirements..."
                                         />
+                                        {errors?.message && <p className="text-red-500 text-sm">{errors.message}</p>}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Submit Button */}
                             <div className="mt-8">
                                 <button
+                                    disabled={loading}
                                     type="submit"
                                     className="block w-full rounded-lg bg-white px-3.5 py-2.5 text-center text-sm font-semibold text-blue-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
                                 >
-                                    Request Quote
+                                    {loading ? "Sending..." : "Request Quote"}
                                 </button>
                             </div>
                         </form>

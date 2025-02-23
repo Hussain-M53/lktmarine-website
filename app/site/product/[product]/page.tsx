@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { sanityClient } from "@/app/lib/sanityClient";
 import imageUrlBuilder from "@sanity/image-url";
+import { PortableText } from '@portabletext/react';
 
 const builder = imageUrlBuilder(sanityClient);
 const urlFor = (source: any) => builder.image(source);
@@ -112,7 +113,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                                     <TabsContent key={idx} value={idx.toString()}>
                                         <Image
                                             src={urlFor(image).url()}
-                                            alt={product.title}
+                                            alt={product?.title}
                                             fill
                                             className="object-cover object-center"
                                         />
@@ -128,23 +129,61 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                             <div>
                                 <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.title}</h1>
                                 <p className="mt-2 text-lg font-medium text-blue-600">{product.description}</p>
-                                <p className="mt-4 text-gray-600 leading-relaxed">{product.body}</p>
+                                <div className="mt-4">
+                                    <PortableText value={product.body} />
+                                </div>
                             </div>
 
                             {/* Features */}
-                            <div className="border-t border-gray-200 pt-8">
-                                <h2 className="text-xl font-semibold text-gray-900">Key Features</h2>
-                                <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    {product.features?.map((feature: string) => (
-                                        <li key={feature} className="flex items-start">
-                                            <svg className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                            <span className="ml-2 text-gray-600">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            {product.features && product.features.length > 0 && (
+                                <div className="border-t border-gray-200 pt-8">
+                                    <h2 className="text-xl font-semibold text-gray-900">Key Features</h2>
+                                    <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        {product.features.map((feature: string) => (
+                                            <li key={feature} className="flex items-start">
+                                                <svg className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="ml-2 text-gray-600">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Specifications */}
+                            {product.specifications && product.specifications.length > 0 && (
+                                <div className="border-t border-gray-200 pt-8">
+                                    <h2 className="text-xl font-semibold text-gray-900">Specifications</h2>
+                                    <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        {product.specifications.map((specification: string) => (
+                                            <li key={specification} className="flex items-start">
+                                                <svg className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="ml-2 text-gray-600">{specification}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* Applications */}
+                            {product.applications && product.applications.length > 0 && (
+                                <div className="border-t border-gray-200 pt-8">
+                                    <h2 className="text-xl font-semibold text-gray-900">Applications</h2>
+                                    <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        {product.applications.map((application: string) => (
+                                            <li key={application} className="flex items-start">
+                                                <svg className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="ml-2 text-gray-600">{application}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

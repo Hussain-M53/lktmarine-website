@@ -128,7 +128,7 @@ export default function Navbar() {
     <header
       onMouseOver={() => setIsVisible(true)}
       className={`fixed left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? 'bg-white/95 backdrop-blur-sm shadow-md'
+        ? 'bg-white/95 backdrop-blur-sm shadow-md top-0'
         : 'bg-transparent'
         } ${isVisible
           ? 'translate-y-0 opacity-100'

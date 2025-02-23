@@ -151,12 +151,12 @@ export default async function ProductListingBySubCategory({ params, searchParams
                   alt={product.title}
                   width={500}
                   height={500}
-                  className="w-96 object-contain object-center group-hover:opacity-75 transition duration-300"
+                  className="w-full object-cover object-center group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
                 <h3 className="text-lg font-medium text-gray-900">{product?.title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{product?.description}</p>
+                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product?.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg

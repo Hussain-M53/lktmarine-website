@@ -5,18 +5,22 @@ import { sanityClient } from "@/app/lib/sanityClient";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-async function fetchAllProducts() {
-  const query = `*[_type == "product"] {
+const PRODUCTS_PER_PAGE = 6; // Set the number of products per page
+
+async function fetchAllProducts(page = 1) {
+  const start = (page - 1) * PRODUCTS_PER_PAGE;
+  const query = `*[_type == "product"] | order(_createdAt desc) [${start}...${start + PRODUCTS_PER_PAGE}] {
     _id,
     title,
-    descrition,
+    slug,
+    description,
     body,
     "images": images[].asset->url
   }`;
@@ -31,8 +35,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function AllProductListing() {
-  const productsListing = await fetchAllProducts();
+export default async function AllProductListing({ searchParams }: { searchParams: Promise<{ page: string }> }) {
+  const page = parseInt((await searchParams)?.page) || 1; // Get current page from search params
+  const productsListing = await fetchAllProducts(page); // Fetch products for the current page
+
+  const total = await sanityClient.fetch(`count(*[_type == "product"])`); // Fetch total number of products
+  const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE); // Calculate total pages
 
   if (!productsListing || productsListing.length === 0) {
     return (
@@ -60,25 +68,25 @@ export default async function AllProductListing() {
 
       {/* Products Grid */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-y-10 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
           {productsListing.map((product: any) => (
             <Link
               key={product._id}
-              href={`/site/product/${product.slug}`}
+              href={`/site/product/${product.slug.current}`}
               className="group"
             >
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
+              <div className="w-full h-[300px] overflow-hidden rounded-lg bg-gray-100">
                 <Image
                   src={product.images[0]}
                   alt={product.title}
                   width={500}
                   height={500}
-                  className="h-full w-full object-cover object-center group-hover:opacity-75 transition duration-300"
+                  className="h-full w-full object-cover group-hover:opacity-75 transition duration-300"
                 />
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
                 <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{product.description}</p>
+                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg
@@ -100,28 +108,57 @@ export default async function AllProductListing() {
           ))}
         </div>
 
-        {/* Pagination Placeholder */}
+        {/* Pagination */}
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious href="#" />
+              <PaginationPrevious
+                href={page > 1 ? `?page=${page - 1}` : undefined}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
+              />
             </PaginationItem>
+
             <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
+              <PaginationLink href="?page=1" isActive={page === 1}>1</PaginationLink>
             </PaginationItem>
+
+            {totalPages > 1 && (
+              <PaginationItem>
+                <PaginationLink href="?page=2" isActive={page === 2}>2</PaginationLink>
+              </PaginationItem>
+            )}
+
+            {page > 3 && totalPages > 4 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            {page > 2 && page < totalPages - 1 && (
+              <PaginationItem>
+                <PaginationLink href={`?page=${page}`} isActive>{page}</PaginationLink>
+              </PaginationItem>
+            )}
+
+            {page < totalPages - 2 && totalPages > 4 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            {totalPages > 2 && (
+              <PaginationItem>
+                <PaginationLink href={`?page=${totalPages}`} isActive={page === totalPages}>
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            )}
+
             <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
+              <PaginationNext
+                href={page < totalPages ? `?page=${page + 1}` : undefined}
+                className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>

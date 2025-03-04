@@ -1,19 +1,22 @@
 import Link from "next/link";
 import React from "react";
+import { sanityClient } from "../lib/sanityClient";
 
-type Props = {
-  categories: Array<{
-    title: string;
-    description: string;
-    image: string;
-    slug: {
-      _type: string;
-      current: string;
-    }
-  }>;
-};
+async function fetchCategories() {
+  const query = `*[_type == "productCategory" && !defined(parentCategory)] {
+    title,
+    slug,
+    description,
+    "image": image.asset->url
+  }`;
 
-export function ProductCategory({ categories }: Props) {
+  const categories = await sanityClient.fetch(query);
+  return categories;
+}
+
+export async function ProductCategory() {
+  const categories = await fetchCategories();
+
   return (
     <div className="bg-white py-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -25,7 +28,7 @@ export function ProductCategory({ categories }: Props) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {categories?.map((item, i) => (
+          {categories?.map((item : any, i : number) => (
             <div
               key={i}
               className="group relative overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:-translate-y-2"

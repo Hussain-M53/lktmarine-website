@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   };
 }
 
-export default async function ProductListingBySubCategory({ params, searchParams  }: { params: Promise<{ category: string, subCategory: string }> , searchParams: Promise<{page:string}> }) {
+export default async function ProductListingBySubCategory({ params, searchParams }: { params: Promise<{ category: string, subCategory: string }>, searchParams: Promise<{ page: string }> }) {
   const { category: categorySlug, subCategory: subCategorySlug } = await params;
   const { category, subCategory } = await fetchCategoryAndSubCategory(categorySlug, subCategorySlug);
   const page = parseInt((await searchParams)?.page) || 1;
@@ -64,7 +64,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
   const { products, total } = await fetchProductsBySubCategory(subCategory._id);
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
 
-  if (!category || !subCategory ) {
+  if (!category || !subCategory) {
     return (
       <div className="min-h-screen bg-gray-300 flex items-center justify-center">
         <div className="text-center">
@@ -81,7 +81,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
     return (
       <div>
         <div className="relative bg-gray-900 h-[300px]">
-          <Image src={category.image} alt={category.title} fill className="object-cover opacity-50" />
+          {category?.image && <Image src={category?.image} alt={category.title} fill className="object-cover opacity-50" />}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <h1 className="text-4xl font-bold text-white mb-4">{subCategory.title}</h1>
@@ -105,12 +105,12 @@ export default async function ProductListingBySubCategory({ params, searchParams
     <div className="bg-white">
       {/* Header Section */}
       <div className="relative bg-gray-900 h-[300px]">
-        <Image
+        {subCategory.image && <Image
           src={subCategory?.image}
           alt={subCategory?.title}
           fill
           className="opacity-50 object-cover"
-        />
+        />}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">{subCategory?.title}</h1>
@@ -142,17 +142,21 @@ export default async function ProductListingBySubCategory({ params, searchParams
           {products.map((product: any) => (
             <Link
               key={product._id}
-              href={`/site/product/${product.slug}?category=${subCategory?.slug}`}
+              href={`/site/product/${product?.slug?.current}?category=${subCategory?.slug}`}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src={product?.images[0]}
-                  alt={product.title}
-                  width={500}
-                  height={500}
-                  className="w-full object-cover object-center group-hover:opacity-75 transition duration-300"
-                />
+
+                {
+                  product?.images &&  product?.images.length > 0 && <Image
+                    src={product?.images[0]}
+                    alt={product.title}
+                    width={500}
+                    height={500}
+                    className="w-full object-cover object-center group-hover:opacity-75 transition duration-300"
+                  />
+                }
+
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
                 <h3 className="text-lg font-medium text-gray-900">{product?.title}</h3>

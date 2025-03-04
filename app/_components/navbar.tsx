@@ -102,7 +102,7 @@ export default function Navbar() {
       }
       setIsScrolled(currentScrollY > 0);
       lastScrollY.current = currentScrollY;
-    }, 100);
+    }, 10);
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 

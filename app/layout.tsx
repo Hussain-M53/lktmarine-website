@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
       <link rel="icon" href="/favicon.png" sizes="512x512" />
       </Head>
       <body className={`${poppins.variable} font-sans antialiased`}>
+        <Analytics/>
         {children}
       </body>
     </html>

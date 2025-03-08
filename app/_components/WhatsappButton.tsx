@@ -5,7 +5,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const WhatsappButton = () => {
-    const phoneNumber = "+923325253111";
+    const phoneNumber = process.env.WHATSAPP_NUMBER;
     const message = "Hello! I'm interested in your services.";
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 

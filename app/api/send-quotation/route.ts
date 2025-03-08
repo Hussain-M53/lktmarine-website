@@ -8,11 +8,11 @@ export async function POST(req: Request) {
             return Response.json({ error: "All fields are required" }, { status: 400 });
         }
 
-        const resend = new Resend('re_vttnSFez_5WdkHxpxJBk2u7XCYjawHzMg');
+        const resend = new Resend(process.env.RESEND_API_KEY);
 
         await resend.emails.send({
             from: 'no-reply@lktmarine.com', 
-            to: 'hash.hussain53@gmail.com', 
+            to: process.env.EMAIL_ADDRESS || '', 
             subject: 'New Quotation Request from Website',
             text: `
           Full Name: ${fullName}

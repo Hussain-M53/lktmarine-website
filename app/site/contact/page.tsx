@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Contact() {
   return (
@@ -45,17 +46,17 @@ export default function Contact() {
                     <PhoneIcon className="h-7 w-7 text-blue-600" />
                     <h3 className="mt-4 text-xl font-semibold text-gray-900">Phone</h3>
                     <p className="mt-3 text-base text-gray-600">
-                      <a href="tel:+97155175 0296" className="hover:text-blue-600">
-                        +971 55 175 0296
-                      </a>
+                      <Link href={`tel:${process.env.WHATSAPP_NUMBER}`} className="hover:text-blue-600">
+                        +97156 2180452
+                      </Link>
                     </p>
                   </div>
                   <div>
                     <EnvelopeIcon className="h-7 w-7 text-blue-600" />
                     <p className="mt-3 text-base text-gray-600">
-                      <a href="mailto:sales1@horizonmsuae.com" className="hover:text-blue-600">
-                        sales1@horizonmsuae.com
-                      </a>
+                      <Link href={`mailto:${process.env.EMAIL_ADDRESS}`} className="hover:text-blue-600">
+                        sales@lktmarine.com
+                      </Link>
                     </p>
                   </div>
                 </div>
@@ -81,7 +82,7 @@ export default function Contact() {
           <div className="rounded-2xl bg-blue-900 p-8 lg:p-12">
             <form action="#" method="POST" className="space-y-6">
               <h3 className="text-2xl font-semibold text-white mb-8">Send us a message</h3>
-              
+
               {/* Name */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-white">

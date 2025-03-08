@@ -22,7 +22,7 @@ function TopBar() {
             <Link href={`mailto:${process.env.EMAIL_ADDRESS}`}>
                 <div className='flex items-center text-white hover:cursor-pointer'>
                     <FaEnvelope className='mr-2' />
-                    <span>info@lktmarine.com</span>
+                    <span>sales@Lktmarine.com</span>
                 </div>
             </Link>
         </div>

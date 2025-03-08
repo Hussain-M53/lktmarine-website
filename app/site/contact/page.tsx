@@ -55,7 +55,7 @@ export default function Contact() {
                     <EnvelopeIcon className="h-7 w-7 text-blue-600" />
                     <p className="mt-3 text-base text-gray-600">
                       <Link href={`mailto:${process.env.EMAIL_ADDRESS}`} className="hover:text-blue-600">
-                        sales@lktmarine.com
+                        sales@Lktmarine.com
                       </Link>
                     </p>
                   </div>

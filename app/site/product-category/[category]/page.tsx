@@ -62,7 +62,7 @@ export default async function ProductListingByCategory({ params, searchParams }:
   const slug = (await params).category;
   const category = await fetchCategoryDetails(slug);
   const page = parseInt((await searchParams)?.page) || 1;
-  const { products, total } = await fetchProductsByCategory(category._id);
+  const { products, total } = await fetchProductsByCategory(category._id,page);
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
 
   if (!category) {
@@ -131,7 +131,7 @@ export default async function ProductListingByCategory({ params, searchParams }:
           {products?.map((product: any) => (
             <Link
               key={product._id}
-              href={`/site/product/${product._id}?category=${slug}`}
+              href={`/site/product/${product?.slug?.current}?category=${slug}`}
               className="group"
             >
               <div className=" w-full h-[300px] overflow-hidden rounded-lg bg-gray-100">

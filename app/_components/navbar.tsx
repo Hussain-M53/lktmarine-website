@@ -15,8 +15,6 @@ import {
 import {
   Bars3Icon,
   WrenchScrewdriverIcon,
-  BoltIcon,
-  WrenchIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
@@ -26,25 +24,12 @@ import { usePathname } from 'next/navigation'
 import { sanityClient } from '@/app/lib/sanityClient'
 import debounce from 'lodash/debounce';
 
-const productCategories = [
-  {
-    name: 'Industrial',
-    href: '/site/product-category/industrial', icon: WrenchScrewdriverIcon,
-    subcategories: ['Climax Lubricant', 'Devcon', 'Lessmann Wire Brushes', 'Liquid Wrench', 'Molykote, Go, Carborundum, Molislip Copaslip', 'Trelawny Surface Preparation Equipment', 'Omega Air Hoist', 'Broco Prime Cut', 'Lead Ingots', 'Load Binders'],
-  },
-  {
-    name: 'Marine & Offshore',
-    href: '/site/product-category/marine-offshore', icon: BoltIcon,
-    subcategories: ['Polypropylene Ropes, Manila Ropes & Jute Ropes', 'Galvanized Chains, Shackets & Hooks', '3M Propeller Polishing Pads & Discs', 'AquaFix Pipe Repair Tapes', 'Broco Tactical', 'Broco Underwater', 'Kolor Kut Water & Oil Gauging Pastes', 'Cordobond USA', 'Polyform US', 'Posiedon Depp Water', 'RSC BIO Oils & Greases', 'Subsalve Liftings Bags', 'Trident Marine Systems Europe', 'Pilot Ladders, Gangway Ladders, Embarkations Ladders'],
-  },
-  {
-    name: 'Deck & Engine Stores',
-    href: '/site/product-category/deck-engine-stores', icon: WrenchIcon,
-    subcategories: ['Aluminum Port Holes', 'Anti Slip Tapes', 'Anti Splashing Tape', 'Boat Scrupper Plugs', 'Chains Blocks, Lever Blocks', 'Flags', 'Life Rings', 'Non Spark Shovels & Scoops', 'Oil Measuring Tapes', 'Oil Sampling Bottles', 'Petro Tapes', 'Swarfega Hand Cleaners', 'Thermometers Brass Case, Copper Case, Stainless Steel', 'Tools & Hardware'],
-  },
-]
-
-
+interface Category {
+  slug: string;
+  title: string;
+  subcategories: Category[];
+  parentCategory?: { slug: string };
+}
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -54,10 +39,7 @@ export default function Navbar() {
   const [isProductsOpen, setIsProductsOpen] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const lastScrollY = useRef(0)
-  const [categories, setCategories] = useState([]);
-
-  const icon = [WrenchScrewdriverIcon, BoltIcon, WrenchIcon ]
-
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -72,16 +54,26 @@ export default function Navbar() {
         }
       `;
       const result = await sanityClient.fetch(query);
-      console.log(result);
-      const organizedCategories = result.reduce((acc : any, category : any) => {
-        if (!category.parentCategory) {
-          acc.push({ ...category, subcategories: [] });
-        } else {
-          const parent = acc.find((cat : any) => cat.slug === category.parentCategory.slug);
-          if (parent) parent.subcategories.push(category);
-        }
-        return acc;
-      }, []);
+
+      const organizedCategories = (() => {
+        const categoryMap = new Map();
+
+        result.forEach((category: any) => {
+          categoryMap.set(category.slug, { ...category, subcategories: [] });
+        });
+
+        result.forEach((category: any) => {
+          if (category.parentCategory) {
+            const parent = categoryMap.get(category.parentCategory.slug);
+            if (parent) {
+              parent.subcategories.push(categoryMap.get(category.slug));
+            }
+          }
+        });
+
+        return Array.from(categoryMap.values()).filter(cat => !cat.parentCategory);
+      })();
+
       console.log(organizedCategories);
       setCategories(organizedCategories);
     }
@@ -201,7 +193,7 @@ export default function Navbar() {
                 }}
                 className="absolute -left-48 top-full z-10 mt-3 w-screen max-w-4xl overflow-hidden rounded-xl bg-white/95 backdrop-blur-sm shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-2">
-                  {categories?.map((item : any, index : number) => (
+                  {categories?.map((item: any, index: number) => (
                     <div key={index} className='flex flex-col '>
                       <div className="group relative flex items-center gap-x-2 rounded-lg p-2 hover:bg-gray-50 transition-colors">
                         <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white transition-colors">
@@ -215,7 +207,7 @@ export default function Navbar() {
                         </div>
                       </div>
                       <div className="pl-14 space-y-2" >
-                        {item?.subcategories?.map((subcategory : any, index : number) => (
+                        {item?.subcategories?.map((subcategory: any, index: number) => (
                           <Link
                             key={index}
                             href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
@@ -304,20 +296,20 @@ export default function Navbar() {
                   </Link>
                   <DisclosurePanel className="pl-6">
                     <div className="space-y-2">
-                      {categories?.map((item : any, index: number) => (
+                      {categories?.map((item: any, index: number) => (
                         <div key={index} className="flex flex-col">
                           <Link
-                             href={`/site/product-category/${item?.slug}`}
+                            href={`/site/product-category/${item?.slug}`}
                             onClick={() => setMobileMenuOpen(false)}
                             className="block text-md font-semibold text-gray-900 hover:text-[#024caa] transition-colors"
                           >
                             {item.title}
                           </Link>
                           <div className="pl-4 space-y-1">
-                            {item.subcategories.map((subcategory : any, index:number) => (
+                            {item.subcategories.map((subcategory: any, index: number) => (
                               <Link
-                              key={index}
-                              href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
+                                key={index}
+                                href={`/site/product-category/${item?.slug}/${subcategory.slug}`}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block text-sm text-gray-600 hover:text-[#024caa] transition-colors"
                               >

@@ -61,7 +61,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
   const { category, subCategory } = await fetchCategoryAndSubCategory(categorySlug, subCategorySlug);
   const page = parseInt((await searchParams)?.page) || 1;
 
-  const { products, total } = await fetchProductsBySubCategory(subCategory._id);
+  const { products, total } = await fetchProductsBySubCategory(subCategory._id,page);
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
 
   if (!category || !subCategory) {

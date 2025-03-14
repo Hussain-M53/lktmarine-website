@@ -145,15 +145,15 @@ export function Footer() {
               <div className="space-y-4">
                 <div className="flex items-start gap-2">
                   <MapPinIcon className="h-6 w-6 flex-shrink-0 mt-1" />
-                  <p>PO Box: 392520, Al Quoz Industrial Area - 4, Dubai, UAE</p>
+                  <p>9 11th St – Al Qusais Industrial Area – Al Qusais Industrial Area 1 Dubai – United Arab Emirates</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <PhoneIcon className="h-5 w-5 flex-shrink-0" />
-                  <a href="tel:+97155175 0296">+971 55 175 0296</a>
+                  <a href="tel:+97156 2180452">+97156 2180452</a>
                 </div>
                 <div className="flex items-center gap-2">
                   <EnvelopeIcon className="h-5 w-5 flex-shrink-0" />
-                  <a href="mailto:sales1@horizonmsuae.com">sales1@lktmarin.com</a>
+                  <a href="mailto:sales@Lktmarine.com">sales@Lktmarine.com</a>
                 </div>
               </div>
             </div>

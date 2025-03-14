@@ -15,7 +15,12 @@ async function getProduct(slug: string) {
       images,
       productCategory->{
         _id,
-        title
+        title,
+        slug,
+        parentCategory->{
+            slug,
+            title
+        }
       },
       body,
       description,
@@ -33,7 +38,8 @@ async function getProductsBySubCategory(categoryId: string) {
       _id,
       title,
       images,
-      slug
+      slug,
+      description
     }
   `;
     return await sanityClient.fetch(query, { categoryId });
@@ -76,7 +82,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                         <li>&gt;</li>
                         <li>
                             <Link
-                                href={`/site/product-category/${category}`}
+                                href={`/site/product-category/${product?.productCategory?.parentCategory?.slug.current}/${product?.productCategory?.slug?.current}`}
                                 className="hover:text-blue-600 capitalize"
                             >
                                 {product.productCategory.title}
@@ -209,7 +215,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                                 </div>
                                 <div className="mt-4 p-4">
                                     <h3 className="text-lg font-medium text-gray-900">{relatedProduct.title}</h3>
-                                    <p className="mt-2 text-sm text-gray-500">{relatedProduct.shortDescription}</p>
+                                    <p className="mt-2 text-sm text-gray-500 line-clamp-2">{relatedProduct.description}</p>
                                     <div className="mt-4 flex items-center text-blue-600">
                                         <span className="text-sm font-medium">View Details</span>
                                         <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

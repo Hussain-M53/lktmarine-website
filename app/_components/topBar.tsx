@@ -8,7 +8,7 @@ function TopBar() {
     const message = "Hello! I'm interested in your services.";
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     return (
-        <div className='bg-gray-800 sticky top-0 h-14 w-full max-w-7xl flex justify-end items-center p-4'>
+        <div className='bg-gray-800 sticky z-40 top-0 h-14 w-full max-w-7xl flex justify-end items-center p-4'>
             <Link
                 href={whatsappURL}
                 target="_blank"

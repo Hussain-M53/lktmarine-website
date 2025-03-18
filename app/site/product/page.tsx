@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
-import { sanityClient } from "@/app/lib/sanityClient"; 
+import { sanityClient } from "@/app/lib/sanityClient";
 import {
   Pagination,
   PaginationContent,
@@ -12,7 +12,7 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 
-const PRODUCTS_PER_PAGE = 6; // Set the number of products per page
+const PRODUCTS_PER_PAGE = 9;
 
 async function fetchAllProducts(page = 1) {
   const start = (page - 1) * PRODUCTS_PER_PAGE;
@@ -69,24 +69,26 @@ export default async function AllProductListing({ searchParams }: { searchParams
       {/* Products Grid */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 gap-y-10 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-          {productsListing.map((product: any) => (
+          {productsListing?.map((product: any) => (
             <Link
               key={product._id}
               href={`/site/product/${product.slug.current}`}
               className="group"
             >
-              <div className="w-full h-[300px] overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src={product.images[0]}
-                  alt={product.title}
-                  width={500}
-                  height={500}
-                  className="h-full w-full object-cover group-hover:opacity-75 transition duration-300"
-                />
+              <div className=" w-full h-[300px] overflow-hidden rounded-lg bg-gray-100">
+                {product?.images ?
+                  <Image
+                    src={product?.images[0]}
+                    alt={product?.title}
+                    width={500}
+                    height={500}
+                    className="h-full w-full object-cover group-hover:opacity-75 transition duration-300"
+                  /> : <div className="h-full w-full bg-gray-400 text-center text-gray-500">No Image</div>
+                }
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
-                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product.description}</p>
+                <h3 className="text-lg font-medium text-gray-900">{product?.title}</h3>
+                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product?.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg

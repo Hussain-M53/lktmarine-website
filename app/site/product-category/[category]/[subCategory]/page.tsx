@@ -61,7 +61,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
   const { category, subCategory } = await fetchCategoryAndSubCategory(categorySlug, subCategorySlug);
   const page = parseInt((await searchParams)?.page) || 1;
 
-  const { products, total } = await fetchProductsBySubCategory(subCategory._id,page);
+  const { products, total } = await fetchProductsBySubCategory(subCategory._id, page);
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
 
   if (!category || !subCategory) {
@@ -148,7 +148,7 @@ export default async function ProductListingBySubCategory({ params, searchParams
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
 
                 {
-                  product?.images &&  product?.images.length > 0 && <Image
+                  product?.images && product?.images.length > 0 && <Image
                     src={product?.images[0]}
                     alt={product.title}
                     width={500}
@@ -178,13 +178,55 @@ export default async function ProductListingBySubCategory({ params, searchParams
         </div>
         <Pagination>
           <PaginationContent>
-            {page > 1 && <PaginationItem><PaginationPrevious href={`?page=${page - 1}`} /></PaginationItem>}
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink href={`?page=${i + 1}`} isActive={i + 1 === page}>{i + 1}</PaginationLink>
+            <PaginationItem>
+              <PaginationPrevious
+                href={page > 1 ? `?page=${page - 1}` : undefined}
+                className={page === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+
+            <PaginationItem>
+              <PaginationLink href="?page=1" isActive={page === 1}>1</PaginationLink>
+            </PaginationItem>
+
+            {totalPages > 1 && (
+              <PaginationItem>
+                <PaginationLink href="?page=2" isActive={page === 2}>2</PaginationLink>
               </PaginationItem>
-            ))}
-            {page < totalPages && <PaginationItem><PaginationNext href={`?page=${page + 1}`} /></PaginationItem>}
+            )}
+
+            {page > 3 && totalPages > 4 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            {page > 2 && page < totalPages - 1 && (
+              <PaginationItem>
+                <PaginationLink href={`?page=${page}`} isActive>{page}</PaginationLink>
+              </PaginationItem>
+            )}
+
+            {page < totalPages - 2 && totalPages > 4 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            {totalPages > 2 && (
+              <PaginationItem>
+                <PaginationLink href={`?page=${totalPages}`} isActive={page === totalPages}>
+                  {totalPages}
+                </PaginationLink>
+              </PaginationItem>
+            )}
+
+            <PaginationItem>
+              <PaginationNext
+                href={page < totalPages ? `?page=${page + 1}` : undefined}
+                className={page === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
           </PaginationContent>
         </Pagination>
       </div>

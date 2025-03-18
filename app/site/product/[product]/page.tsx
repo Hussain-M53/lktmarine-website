@@ -98,7 +98,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                     <div className="lg:max-w-lg lg:self-start">
                         <Tabs defaultValue="0" className="flex flex-col-reverse">
                             <TabsList className="grid grid-cols-4 gap-4 mt-4">
-                                {product?.images.map((image: any, idx: number) => (
+                                {product?.images?.map((image: any, idx: number) => (
                                     <TabsTrigger
                                         key={idx}
                                         value={idx.toString()}
@@ -115,7 +115,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                             </TabsList>
 
                             <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100">
-                                {product?.images.map((image: any, idx: number) => (
+                                {product?.images?.map((image: any, idx: number) => (
                                     <TabsContent key={idx} value={idx.toString()}>
                                         <Image
                                             src={urlFor(image).url()}

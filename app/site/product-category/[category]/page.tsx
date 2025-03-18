@@ -13,7 +13,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const PRODUCTS_PER_PAGE = 6;
+const PRODUCTS_PER_PAGE = 9;
 
 async function fetchCategoryDetails(slug: string) {
   const query = `*[_type == "productCategory" && slug.current == $slug][0] {
@@ -62,7 +62,7 @@ export default async function ProductListingByCategory({ params, searchParams }:
   const slug = (await params).category;
   const category = await fetchCategoryDetails(slug);
   const page = parseInt((await searchParams)?.page) || 1;
-  const { products, total } = await fetchProductsByCategory(category._id,page);
+  const { products, total } = await fetchProductsByCategory(category._id, page);
   const totalPages = Math.ceil(total / PRODUCTS_PER_PAGE);
 
   if (!category) {
@@ -135,17 +135,20 @@ export default async function ProductListingByCategory({ params, searchParams }:
               className="group"
             >
               <div className=" w-full h-[300px] overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src={product.images[0]}
-                  alt={product.title}
-                  width={500}
-                  height={500}
-                  className="h-full w-full object-cover group-hover:opacity-75 transition duration-300"
-                />
+                {product?.images ?
+                  <Image
+                    src={product?.images[0]}
+                    alt={product?.title}
+                    width={500}
+                    height={500}
+                    className="h-full w-full object-cover group-hover:opacity-75 transition duration-300"
+                  /> : <div className="h-full w-full bg-gray-400 text-center text-gray-500">No Image</div>
+                }
+
               </div>
               <div className="mt-4 bg-white p-4 rounded-lg shadow-sm">
-                <h3 className="text-lg font-medium text-gray-900">{product.title}</h3>
-                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product.description}</p>
+                <h3 className="text-lg font-medium text-gray-900">{product?.title}</h3>
+                <p className="mt-2 text-sm text-gray-500 line-clamp-2">{product?.description}</p>
                 <div className="mt-4 flex items-center text-blue-600">
                   <span className="text-sm font-medium">View Details</span>
                   <svg

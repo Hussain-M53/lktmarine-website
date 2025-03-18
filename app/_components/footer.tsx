@@ -15,10 +15,10 @@ import {
 export function Footer() {
   const quickLinks = [
     { name: 'Home', href: '/' },
-    { name: 'About us', href: '/about' },
-    { name: 'Products', href: '/products' },
-    { name: 'Contact Us', href: '/contact' },
-    { name: 'Sitemap', href: '/sitemap' },
+    { name: 'About us', href: '/site/about' },
+    { name: 'Products', href: '/site/products' },
+    { name: 'Contact Us', href: '/site/contact' },
+    // { name: 'Sitemap', href: '/site/sitemap' },
   ];
 
   const links = [

@@ -33,8 +33,8 @@ export default function Contact() {
                 <BuildingOffice2Icon className="h-7 w-7 text-blue-600" />
                 <h3 className="mt-4 text-xl font-semibold text-gray-900">Office Location</h3>
                 <p className="mt-3 text-base text-gray-600">
-                  PO Box: 392520, <br />
-                  Al Quoz Industrial Area - 4, <br />
+                  9 11th St – Al Qusais Industrial Area, <br />
+                  Al Qusais Industrial Area 1 Dubai, <br />
                   Dubai, UAE
                 </p>
               </div>
@@ -66,7 +66,7 @@ export default function Contact() {
             {/* Map */}
             <div className="rounded-2xl overflow-hidden shadow-lg h-[400px] relative">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.626026570831!2d55.2418825!3d25.2208333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5d4895555555%3A0x0!2sAl+Quoz+Industrial+Area+4%2C+Dubai%2C+UAE!5e0!3m2!1sen!2sae!4v1"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.000000000000!2d55.4000000!3d25.2800000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5d0000000000%3A0x0!2sAl+Qusais+Industrial+Area+1%2C+Dubai%2C+UAE!5e0!3m2!1sen!2sae!4v1"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

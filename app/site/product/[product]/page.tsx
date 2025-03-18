@@ -127,6 +127,9 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                                 ))}
                             </div>
                         </Tabs>
+                        <div className="mt-4">
+                            <PortableText value={product.body} />
+                        </div>
                     </div>
 
                     {/* Product Details */}
@@ -135,9 +138,9 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
                             <div>
                                 <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.title}</h1>
                                 <p className="mt-2 text-lg font-medium text-blue-600">{product.description}</p>
-                                <div className="mt-4">
+                                {/* <div className="mt-4">
                                     <PortableText value={product.body} />
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Features */}
